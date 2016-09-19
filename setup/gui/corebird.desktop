@@ -1,0 +1,13 @@
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=corebird
+GenericName=Corebird Twitter client
+Comment=Twitter client using GTK3
+Exec=${SNAP}/bin/corebird
+Icon=${SNAP}/meta/gui/corebird.svg
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Application;Social
+Mimetype=application/corebird;
