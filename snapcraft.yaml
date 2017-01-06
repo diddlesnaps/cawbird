@@ -60,4 +60,5 @@ parts:
       - librest-0.7-0
       - libsqlite3-0
       - libxml2
+      - zlib1g
     after: [ desktop-gtk3 ]
