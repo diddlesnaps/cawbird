@@ -12,7 +12,6 @@ slots:
     interface: dbus
     bus: session
     name: org.baedert.corebird
-architectures: [ amd64, i386 ]
 apps:
   corebird:
     command: desktop-launch $SNAP/usr/bin/corebird
