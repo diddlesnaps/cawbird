@@ -1,5 +1,5 @@
 name: corebird-diddledan
-version: "1.4.1"
+version: "1.4.2"
 summary: CoreBird Twitter Client
 description: |
   Corebird is a modern and lightweight Twitter client for the GNOME 3 desktop. It
@@ -18,7 +18,7 @@ apps:
     plugs: [gsettings, home, network, pulseaudio, unity7]
 parts:
   corebird:
-    source: https://github.com/baedert/corebird/releases/download/1.4.1/corebird-1.4.1.tar.xz
+    source: https://github.com/baedert/corebird/releases/download/1.4.2/corebird-1.4.2.tar.xz
     plugin: autotools
     configflags: [ '--prefix=/usr', '--disable-spellcheck' ]
     build-packages:
