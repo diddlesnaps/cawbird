@@ -73,6 +73,7 @@ if [ ! -d $SNAP_USER_DATA/openh264 -o ! -f $SNAP_USER_DATA/openh264/libopenh264.
   mkdir $SNAP_USER_DATA/openh264
   curl -o $SNAP_USER_DATA/openh264/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-1.6.0-linux64.3.so.bz2
   bunzip2 $SNAP_USER_DATA/openh264/libopenh264.so.bz2
+	ln -s libopenh264.so $SNAP_USER_DATA/libopenh264.so.3
 fi
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP_USER_DATA/openh264
 

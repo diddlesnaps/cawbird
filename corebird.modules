@@ -44,11 +44,11 @@
     <branch version="1.5" repo="https://github.com/baedert/corebird/releases/download/" module="1.5/corebird-1.5.tar.xz"/>
     <branch repo="github.com" checkoutdir="corebird" module="baedert/corebird.git"/>
     <dependencies>
+			<dep package="dconf"/>
       <dep package="glib-networking"/>
 			<dep package="gspell"/>
       <dep package="gst-plugins-good"/>
       <dep package="gst-plugins-bad"/>
-      <!--<dep package="gst-libav"/>-->
       <dep package="gtk+-3"/>
       <dep package="intltool"/>
       <dep package="json-glib"/>
