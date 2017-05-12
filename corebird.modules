@@ -1,0 +1,68 @@
+<?xml version="1.0"?><!--*- mode: nxml; indent-tabs-mode: nil -*-->
+<!DOCTYPE moduleset SYSTEM "moduleset.dtd">
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<!-- vim:set ts=2 expandtab: -->
+<moduleset>
+
+  <repository type="git" name="gstreamer.freedesktop.org" href="git://anongit.freedesktop.org/gstreamer/"/>
+  <repository type="git" name="github.com" href="git://github.com/"/>
+
+  <include href="http://ftp.gnome.org/pub/GNOME/teams/releng/3.25.1/gnome-apps-3.25.1.modules"/>
+
+  <autotools id="gst-plugins-good">
+    <branch version="1.10.4" size="3420980" repo="http://gstreamer.freedesktop.org/src/gst-plugins-good/" module="gst-plugins-good-1.10.4.tar.xz"/>
+    <branch repo="gstreamer.freedesktop.org" module="gst-plugins-good" checkoutdir="gst-plugins-good"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+      <dep package="flac"/>
+      <dep package="libvpx"/>
+      <dep package="taglib"/>
+      <dep package="wavpack"/>
+    </dependencies>
+    <suggests>
+      <dep package="pulseaudio"/>
+      <dep package="gdk-pixbuf"/>
+      <dep package="gudev"/>
+      <dep package="libsoup"/>
+    </suggests>
+  </autotools>
+
+  <autotools id="gst-plugins-bad">
+    <branch version="1.10.4" size="4738824" repo="http://gstreamer.freedesktop.org/src/gst-plugins-bad/" module="gst-plugins-bad-1.10.4.tar.xz"/>
+    <branch repo="gstreamer.freedesktop.org" module="gst-plugins-bad" checkoutdir="gst-plugins-bad"/>
+    <dependencies>
+      <dep package="gstreamer"/>
+      <dep package="gst-plugins-base"/>
+    </dependencies>
+    <suggests>
+      <dep package="graphene"/>
+    </suggests>
+  </autotools>
+
+  <autotools id="corebird">
+    <branch version="1.5" repo="https://github.com/baedert/corebird/releases/download/" module="1.5/corebird-1.5.tar.xz"/>
+    <branch repo="github.com" checkoutdir="corebird" module="baedert/corebird.git"/>
+    <dependencies>
+      <dep package="glib-networking"/>
+			<dep package="gspell"/>
+      <dep package="gst-plugins-good"/>
+      <dep package="gst-plugins-bad"/>
+      <!--<dep package="gst-libav"/>-->
+      <dep package="gtk+-3"/>
+      <dep package="intltool"/>
+      <dep package="json-glib"/>
+      <dep package="libgee"/>
+      <dep package="librest"/>
+      <dep package="librsvg"/>
+      <dep package="libsoup"/>
+      <dep package="sqlite3"/>
+      <dep package="vala"/>
+    </dependencies>
+  </autotools>
+
+  <repository type="tarball" name="https://github.com/cisco/openh264/archive/" href="https://github.com/cisco/openh264/archive/"/>
+  <repository type="tarball" name="http://gstreamer.freedesktop.org/src/gst-plugins-good/" href="http://gstreamer.freedesktop.org/src/gst-plugins-good/"/>
+  <repository type="tarball" name="http://gstreamer.freedesktop.org/src/gst-plugins-bad/" href="http://gstreamer.freedesktop.org/src/gst-plugins-bad/"/>
+  <repository type="tarball" name="https://github.com/baedert/corebird/releases/download/" href="https://github.com/baedert/corebird/releases/download/"/>
+</moduleset>
