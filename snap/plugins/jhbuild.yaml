@@ -17,3 +17,5 @@ options:
 		type: string
 	ccache-cache:
 		type: string
+	cflags:
+		type: string

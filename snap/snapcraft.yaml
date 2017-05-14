@@ -7,6 +7,7 @@ description: |
   features inline image and video preview, creation of lists and favorites,
   filtering of tweets and full text search. Corebird is able to manage multiple
   Twitter accounts.
+icon: corebird.svg
 confinement: strict
 slots:
   dbus-corebird:
@@ -16,7 +17,7 @@ slots:
 apps:
   corebird:
     command: desktop-launch $SNAP/usr/bin/corebird
-		desktop: setup/gui/corebird.desktop
+    #desktop: meta/gui/corebird.desktop
     #desktop: usr/share/applications/org.baedert.corebird.desktop
     plugs:
       - gsettings
@@ -58,6 +59,7 @@ parts:
     module-set-dir: .
     modules:
       - corebird
+    cflags: '-Os'
     # prepare: |
     #   # sed -i "s/revision=\"master\"/revision=\"$(git describe)\"/" corebird.modules
     #   sed -i "s/revision=\"master\"/revision=\"1.5\"/" corebird.modules
@@ -145,6 +147,8 @@ parts:
     prime:
       - '-usr/share/aclocal'
       - '-bash-completion'
+      - '-etc/gss/'
+      - '-etc/ldap/'
       - '-defaults'
       - '-devhelp'
       - '-usr/_jhbuild'

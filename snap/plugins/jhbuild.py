@@ -168,6 +168,9 @@ class JHBuildPlugin(snapcraft.BasePlugin):
             'ccache-cache': {
                 'type': 'string',
             },
+            'cflags': {
+                'type': 'string',
+            },
         }
 
         schema['required'] = ['modules']
@@ -338,6 +341,7 @@ use_local_modulesets = True
 skip = [{skip!s}]
 module_autogenargs['gdk-pixbuf'] = '--disable-gio-sniffing'
 extra_prefixes = [{extra_prefixes!s}]
+cflags = {cflags!r}
 '''
 
             extra_prefixes = [os.path.join(self.project.stage_dir, 'usr'),
@@ -358,30 +362,31 @@ extra_prefixes = [{extra_prefixes!s}]
                                   ['\'%s\'' % module for module in self.skip_modules]),
                               extra_prefixes=', '.join(
                                   ['\'%s\'' % prefix for prefix in extra_prefixes]),
+                              cflags=self.options.cflags,
                              ))
 
     def pull(self):
         self._pull_jhbuild()
         self._setup_jhbuild()
 
-        self.jhbuild(['sanitycheck'], output = False)
+        self.jhbuild(['sanitycheck'], output=False)
 
-        modules=self.jhbuild(['list'] + self.modules,
-                               output = True).splitlines()
+        modules = self.jhbuild(['list'] + self.modules,
+                               output=True).splitlines()
 
         if 'gtk+' in modules or 'gtk+-3' in modules:
             self.modules.append('adwaita-icon-theme')
             self.stage_packages.append('ttf-ubuntu-font-family')
 
         LOG.info('Pulling modules')
-        self.jhbuild(['update'] + self.modules, output = False)
+        self.jhbuild(['update'] + self.modules, output=False)
 
     def build(self):
         self._setup_jhbuild()
 
         LOG.info('Building modules')
         self.jhbuild(['build'] + self.modules,
-                     cwd = self.builddir, output = False)
+                     cwd=self.builddir, output=False)
 
         LOG.info('Fixing symbolic links')
         self.run(['symlinks', '-c', '-d', '-r', '-s', '-v', self.installdir])

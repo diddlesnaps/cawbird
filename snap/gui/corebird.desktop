@@ -1,11 +1,10 @@
-
 [Desktop Entry]
 Encoding=UTF-8
-Name=corebird
+Name=Corebird
 GenericName=Corebird Twitter client
 Comment=Twitter client using GTK3
 Exec=corebird-diddledan.corebird
-Icon=${SNAP}/meta/gui/corebird.svg
+Icon=${SNAP}/usr/share/icons/hicolor/256x256/apps/corebird.png
 Terminal=false
 Type=Application
 StartupNotify=false
