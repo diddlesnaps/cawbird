@@ -1,0 +1,21 @@
+options:
+	modules:
+		required: True
+		type: array
+		items:
+			type: string
+		minItems: 1
+		uniqueItems: True
+	module-set:
+		type: string
+		default: gnome-world
+	module-set-dir:
+		type: string
+	jhbuild-archive:
+		type: string
+	jhbuild-mirror:
+		type: string
+	ccache-cache:
+		type: string
+	cflags:
+		type: string
