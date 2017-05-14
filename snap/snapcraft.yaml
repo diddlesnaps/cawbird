@@ -16,6 +16,7 @@ slots:
 apps:
   corebird:
     command: desktop-launch $SNAP/usr/bin/corebird
+		desktop: setup/gui/corebird.desktop
     #desktop: usr/share/applications/org.baedert.corebird.desktop
     plugs:
       - gsettings
@@ -76,7 +77,6 @@ parts:
       - libgl1-mesa-dev
       - libgnutls-dev
       - libgudev-1.0-dev
-      - libharfbuzz-dev
       - libmount-dev
       - liborc-0.4-dev
       - libpng12-dev
