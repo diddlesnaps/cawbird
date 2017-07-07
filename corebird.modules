@@ -60,8 +60,8 @@
   </autotools>
 
   <autotools id="corebird" autogenargs="--disable-rpath">
-    <branch version="1.5" size="668064" hash="sha256:6414668383c08f3a4bbb83da61ec4643ee7dd0470f60bac26f1e65771f03f7e1"
-            repo="https://github.com/baedert/corebird/releases/download/" module="1.5/corebird-1.5.tar.xz"/>
+    <branch version="1.5.1" size="676192" hash="sha256:e7b641a25e279d8251ca0a9fa2ef11a5dd364e369e1fa54f5545824dc96deda0"
+            repo="https://github.com/baedert/corebird/releases/download/" module="1.5.1/corebird-1.5.1.tar.xz"/>
     <branch repo="github.com" checkoutdir="corebird" module="baedert/corebird.git"/>
     <dependencies>
       <dep package="dconf"/>

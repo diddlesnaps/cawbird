@@ -1,3 +1,6 @@
 *.snap
 *.tar.gz
 *.tar.bz2
+parts
+prime
+stage

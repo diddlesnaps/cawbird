@@ -1,6 +1,6 @@
 name: corebird
-version: "1.5"
-grade: devel
+version: "1.5.1"
+grade: stable
 summary: CoreBird Twitter Client
 description: |
   Corebird is a modern and lightweight Twitter client for the GNOME 3 desktop. It
@@ -60,9 +60,6 @@ parts:
     modules:
       - corebird
     cflags: '-Os'
-    # prepare: |
-    #   # sed -i "s/revision=\"master\"/revision=\"$(git describe)\"/" corebird.modules
-    #   sed -i "s/revision=\"master\"/revision=\"1.5\"/" corebird.modules
     build-packages:
       - bzip2
       - desktop-file-utils
@@ -85,12 +82,9 @@ parts:
       - libproxy-dev
       - libpulse-dev
       - libsqlite3-dev
-      # - libtagc0-dev
       - libtiff5-dev
       - libunwind-dev
       - libv4l-dev
-      # - libvpx-dev
-      # - libwavpack-dev
       - libwayland-dev
       - libxcb-xkb-dev
       - libxft-dev
@@ -110,39 +104,7 @@ parts:
     stage-packages:
       - bzip2
       - curl
-      # - enchant
-      # - gstreamer1.0-libav
-      # - gstreamer1.0-plugins-bad
-      # - gstreamer1.0-plugins-base
-      # - gstreamer1.0-pulseaudio
-      # - libcairo2
-      # - libdbus-1-3
-      # - libegl1-mesa
-      # - libepoxy0
-      # - libffi6
-      # - libflac8
       - libfontconfig1
-      # - libgnutls30
-      # - libgudev-1.0-0
-      # - libharfbuzz0b
-      # - libmount1
-      # - libpng12-0
-      # - libproxy1v5
-      # - libpulse0
-      # - libsqlite3-0
-      # - libtagc0
-      # - libtiff5
-      # - libunwind8
-      # - libv4l-0
-      # - libvpx3
-      # - libwavpack1
-      # - libwayland-client0
-      # - libxcb-xkb1
-      # - libxft2
-      # - libxi6
-      # - libxml2
-      # - libxslt1.1
-      # - libxtst6
     after: [desktop-helper, openh264]
     prime:
       - '-usr/share/aclocal'
@@ -200,7 +162,6 @@ parts:
       - '-usr/share/bash-completion'
       - '-usr/share/devhelp'
       - '-usr/share/doc*'
-      #- '-usr/share/GConf'
       - '-usr/share/gdb'
       - '-usr/share/gettext*'
       - '-usr/share/gir-1.0'
