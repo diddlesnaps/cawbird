@@ -157,6 +157,7 @@ parts:
       - '-usr/lib/vala*'
       - '-usr/libexec/at-spi*'
       - '-usr/libexec/glib-pacrunner'
+      - '-usr/libexec/gstreamer-1.0/gst-ptp-helper'
       - '-usr/libexec/installed-tests'
       - '-usr/share/applications/gtk-*'
       - '-usr/share/bash-completion'
