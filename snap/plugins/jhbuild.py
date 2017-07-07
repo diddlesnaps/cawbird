@@ -30,7 +30,6 @@ The plugin can be customized with the following keys:
              set to `.` to reference your project folder.
   - jhbuild-archive: the source tarball directory on the build host
   - jhbuild-mirror: the DVCS repository directory on the build host
-  - ccache-cache: the ccache directory on the build host
 
 Advice:
 
@@ -38,7 +37,8 @@ Advice:
     module dependency graph.
 
   - The desktop-gtk3 helper is incompatible with GTK built by jhbuild. A custom
-    helper is currently required. See github.com/diddledan/corebird for example.
+    helper is currently required.
+    See github.com/diddledan/corebird for example.
 
   - Building WebKit requires a lot of time and computing power. If WebKit is a
     dependency of your JHBuild module, it can be skipped by adding '-WebKit' to
@@ -49,9 +49,6 @@ Advice:
     jhbuild-mirror to prevent repeated downloading of the JHBuild module
     sources. It's best to reserve common directories on your local machine that
     can be reused by all snaps you might want to build.
-
-  - If you find yourself re-building the same modules over-and-over again, you
-    can specify a local ccache directory on the build host using ccache-cache.
 """
 
 import glob
@@ -72,11 +69,10 @@ BUILD_PACKAGES = {
     'bison',
     'build-essential',
     'ca-certificates',
-    'ccache',
     'cvs',
+    'docbook',
     'docbook-xml',
     'docbook-xsl',
-    'docbook',
     'flex',
     'gettext',
     'git',
@@ -99,14 +95,6 @@ BUILD_PACKAGES = {
 
 
 LOG = logging.getLogger(__name__)
-
-
-def _make_jhbuild_env(env, ccache_dir):
-    os_env = os.environ.copy()
-    override = {
-        'HOME': HOME, 'PATH': '/usr/lib/ccache:%s' % os.getenv('PATH'), 'CCACHE_DIR': ccache_dir}
-
-    return {**os_env, **env, **override}
 
 
 def _get_jhbuild_user():
@@ -158,18 +146,19 @@ class JHBuildPlugin(snapcraft.BasePlugin):
             },
             'module-set-dir': {
                 'type': 'string',
+                'default': '',
             },
             'jhbuild-archive': {
                 'type': 'string',
+                'default': '',
             },
             'jhbuild-mirror': {
                 'type': 'string',
-            },
-            'ccache-cache': {
-                'type': 'string',
+                'default': '',
             },
             'cflags': {
                 'type': 'string',
+                'default': '',
             },
         }
 
@@ -179,6 +168,8 @@ class JHBuildPlugin(snapcraft.BasePlugin):
 
     @classmethod
     def get_pull_properties(cls):
+        # Inform Snapcraft of the properties associated with pulling. If these
+        # change in the YAML Snapcraft will consider the build step dirty.
         return [
             'modules',
             'module-set',
@@ -189,7 +180,11 @@ class JHBuildPlugin(snapcraft.BasePlugin):
 
     @classmethod
     def get_build_properties(cls):
-        return ['ccache-cache']
+        # Inform Snapcraft of the properties associated with building. If these
+        # change in the YAML Snapcraft will consider the build step dirty.
+        return [
+            'cflags',
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -206,15 +201,14 @@ class JHBuildPlugin(snapcraft.BasePlugin):
         self.jhbuild_program = os.path.join(
             self.partdir, 'jhbuild', 'usr', 'bin', 'jhbuild')
         self.jhbuildrc_path = os.path.join(self.partdir, 'jhbuildrc')
-        self.default_ccache_cache = os.sep + \
-            os.path.join(self.builddir, 'jhbuild', 'ccache')
 
     def enable_cross_compilation(self):
         """
         We don't support cross compilation (yet?)
         """
         raise NotImplementedError(
-            'The {!s} plugin does not support cross compilation'.format(self.name))
+            'The {!s} plugin does not support cross compilation'.format(
+                self.name))
 
     def run(self, cmd, cwd=None, **kwargs):
         """Run a command.
@@ -224,9 +218,7 @@ class JHBuildPlugin(snapcraft.BasePlugin):
         :param list cmd: command arguments, first is the executable
         :param str cwd: working directory
         """
-        env = _make_jhbuild_env(kwargs.pop(
-            'env', {}), self.options.ccache_cache or self.default_ccache_cache)
-        return super().run(cmd, cwd=cwd, env=env, **kwargs)
+        return super().run(cmd, cwd=cwd, **kwargs)
 
     def run_output(self, cmd, cwd=None, **kwargs):
         """Run a command, capturing its output.
@@ -239,9 +231,7 @@ class JHBuildPlugin(snapcraft.BasePlugin):
         :return: the output of the command
         :rtype: str
         """
-        env = _make_jhbuild_env(kwargs.pop(
-            'env', {}), self.options.ccache_cache or self.default_ccache_cache)
-        return super().run_output(cmd, cwd=cwd, env=env, **kwargs)
+        return super().run_output(cmd, cwd=cwd, **kwargs)
 
     def jhbuild(self, args, output=True, **kwargs):
         """Run JHBuild in the build stage.
@@ -263,9 +253,9 @@ class JHBuildPlugin(snapcraft.BasePlugin):
         return run(cmd + args, cwd=cwd, **kwargs)
 
     def _create_jhbuild_user(self):
-        common.run(['adduser', '--home', os.sep + os.path.join(self.partdir, 'jhbuild', 'home'),
-                    '--shell', '/bin/bash', '--disabled-password',
-                    '--system', '--quiet', 'jhbuild'])
+        common.run(['adduser', '--shell', '/bin/bash', '--disabled-password',
+                    '--system', '--quiet', '--home', os.sep +
+                    os.path.join(self.partdir, 'jhbuild', 'home'), 'jhbuild'])
         return _get_jhbuild_user()
 
     def _set_jhbuild_ownership(self, paths):
@@ -298,18 +288,15 @@ class JHBuildPlugin(snapcraft.BasePlugin):
         if not os.path.exists(self.jhbuild_program):
             LOG.info('Building JHBuild')
 
-            default_ccache_cache = os.sep + \
-                os.path.join(self.builddir, 'jhbuild', 'ccache')
-            env = {'CCACHE_DIR': self.options.ccache_cache or default_ccache_cache}
-
-            self.run(['./autogen.sh', '--prefix=%s' % os.sep + os.path.join(
-                self.partdir, 'jhbuild', 'usr')], env=env, cwd=self.jhbuild_src)
+            self.run(['./autogen.sh', '--prefix=%s' % os.sep +
+                      os.path.join(self.partdir, 'jhbuild', 'usr')],
+                     cwd=self.jhbuild_src)
 
             self.run(['make', '-j%d' % self.parallel_build_count],
-                     env=env, cwd=self.jhbuild_src)
+                     cwd=self.jhbuild_src)
 
             self.run(['make', '-j%d' % self.parallel_build_count,
-                      'install'], env=env, cwd=self.jhbuild_src)
+                      'install'], cwd=self.jhbuild_src)
 
         archive_path = os.path.join(self.partdir, 'jhbuild', 'packages')
         mirror_path = os.path.join(self.partdir, 'jhbuild', 'mirror')
@@ -345,13 +332,15 @@ cflags = {cflags!r}
 '''
 
             extra_prefixes = [os.path.join(self.project.stage_dir, 'usr'),
-                              os.path.join(self.project.stage_dir, 'usr', 'local')]
+                              os.path.join(self.project.stage_dir, 'usr',
+                                           'local')]
 
             jhbuildrc_file.write(
                 config.format(module_set=self.options.module_set,
                               modulesets_dir=self.options.module_set_dir,
-                              tarballdir=self.options.jhbuild_archive or os.path.join(
-                                  self.partdir, 'jhbuild', 'packages'),
+                              tarballdir=self.options.jhbuild_archive or
+                              os.path.join(self.partdir, 'jhbuild',
+                                           'packages'),
                               dvcs_mirror_dir=os.path.join(
                                   self.partdir, 'jhbuild', 'mirror'),
                               checkoutroot=os.path.join(
@@ -359,11 +348,13 @@ cflags = {cflags!r}
                               buildroot=os.path.join(self.builddir, 'jhbuild'),
                               prefix=os.path.join(self.installdir, 'usr'),
                               skip=', '.join(
-                                  ['\'%s\'' % module for module in self.skip_modules]),
+                                  ['\'%s\'' % module for module in
+                                   self.skip_modules]),
                               extra_prefixes=', '.join(
-                                  ['\'%s\'' % prefix for prefix in extra_prefixes]),
+                                  ['\'%s\'' % prefix for prefix in
+                                   extra_prefixes]),
                               cflags=self.options.cflags,
-                             ))
+                              ))
 
     def pull(self):
         self._pull_jhbuild()
