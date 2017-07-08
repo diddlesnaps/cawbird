@@ -38,6 +38,7 @@ parts:
       - libxkbcommon0  # XKB_CONFIG_ROOT
       - ttf-ubuntu-font-family
       - dmz-cursor-theme
+      - hicolor-icon-theme
       - shared-mime-info
       - locales-all
 
