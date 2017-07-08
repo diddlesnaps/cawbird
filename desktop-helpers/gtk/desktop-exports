@@ -68,14 +68,17 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUNTIME/usr/lib/$ARCH/libunity
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUNTIME/usr/lib/$ARCH/pulseaudio:$RUNTIME/usr/lib/pulseaudio
 
 # OpenH264 library
-if [ ! -d $SNAP_USER_DATA/openh264 -o ! -f $SNAP_USER_DATA/openh264/libopenh264.so ]; then
-  rm -rf $SNAP_USER_DATA/openh264
-  mkdir $SNAP_USER_DATA/openh264
-  curl -o $SNAP_USER_DATA/openh264/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-1.6.0-linux64.3.so.bz2
-  bunzip2 $SNAP_USER_DATA/openh264/libopenh264.so.bz2
-	ln -s libopenh264.so $SNAP_USER_DATA/libopenh264.so.3
+H264DIR=$SNAP_USER_DATA/openh264
+if [ ! -d $H264DIR -o ! -f $H264DIR/libopenh264.so ]; then
+  rm -rf $H264DIR
+  mkdir -p $H264DIR
+  curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-1.6.0-linux64.3.so.bz2
+  bunzip2 $H264DIR/libopenh264.so.bz2
 fi
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP_USER_DATA/openh264
+if [ ! -e $H264DIR/libopenh264.so.3 ]; then
+  ln -s libopenh264.so $H264DIR/libopenh264.so.3
+fi
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$H264DIR
 
 # Tell GStreamer where to find its plugins
 if [ -d $SNAP/usr/lib/$ARCH/gstreamer-1.0 ]; then
