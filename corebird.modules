@@ -64,6 +64,7 @@
             repo="https://github.com/baedert/corebird/releases/download/" module="1.5.1/corebird-1.5.1.tar.xz"/>
     <branch repo="github.com" checkoutdir="corebird" module="baedert/corebird.git"/>
     <dependencies>
+      <dep package="adwaita-icon-theme"/>
       <dep package="dconf"/>
       <dep package="glib-networking"/>
       <dep package="gspell"/>
