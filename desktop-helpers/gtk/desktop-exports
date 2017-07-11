@@ -77,9 +77,9 @@ if [ ! -d $H264DIR -o ! -f $H264DIR/libopenh264.so ]; then
   rm -rf $H264DIR
   mkdir -p $H264DIR
 
-  if [ "$ARCH" = "armv7l" ]; then
+  if [ "$SNAP_ARCH" = "armhf" ]; then
     curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-android.$OPENH264SUFFIX.so.bz2
-  elif [ "$ARCH" = "x86_64" ]; then
+  elif [ "$SNAP_ARCH" = "amd64" ]; then
     curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-linux64.$OPENH264SUFFIX.so.bz2
   fi
 
