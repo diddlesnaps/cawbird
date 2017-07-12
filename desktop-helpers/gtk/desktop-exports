@@ -71,16 +71,15 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUNTIME/usr/lib/$ARCH/pulseaudio:$RUNTI
 H264DIR=$SNAP_USER_DATA/openh264
 
 OPENH264VERSION=1.7.0
-OPENH264SUFFIX=4
 
 if [ ! -d $H264DIR -o ! -f $H264DIR/libopenh264.so ]; then
   rm -rf $H264DIR
   mkdir -p $H264DIR
 
   if [ "$SNAP_ARCH" = "armhf" ]; then
-    curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-android.$OPENH264SUFFIX.so.bz2
+    curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-android19.so.bz2
   elif [ "$SNAP_ARCH" = "amd64" ]; then
-    curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-linux64.$OPENH264SUFFIX.so.bz2
+    curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-linux64.4.so.bz2
   fi
 
   bunzip2 $H264DIR/libopenh264.so.bz2
