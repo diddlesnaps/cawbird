@@ -95,6 +95,9 @@ fi
 if [ ! -e $H264DIR/libopenh264.so.3 ]; then
   ln -s libopenh264.so $H264DIR/libopenh264.so.3
 fi
+if [ ! -e $H264DIR/libopenh264.so.4 ]; then
+  ln -s libopenh264.so $H264DIR/libopenh264.so.4
+fi
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$H264DIR
 
 # Tell GStreamer where to find its plugins
