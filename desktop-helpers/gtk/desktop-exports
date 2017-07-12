@@ -71,18 +71,25 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RUNTIME/usr/lib/$ARCH/pulseaudio:$RUNTI
 H264DIR=$SNAP_USER_DATA/openh264
 
 OPENH264VERSION=1.7.0
+OPENH264ARMURL="https://c7ab4fbd1155b1257820-fefb1450afc680271ea365edabf976ea.ssl.cf1.rackcdn.com/libopenh264-1.7.0-android19.so.bz2"
+OPENH264X64URL=""
 
-if [ ! -d $H264DIR -o ! -f $H264DIR/libopenh264.so ]; then
+if [ ! -f $H264DIR/version -o "$(cat $H264DIR/version)" != "$OPENH264VERSION" -o ! -f $H264DIR/libopenh264.so ]; then
   rm -rf $H264DIR
   mkdir -p $H264DIR
 
+	OPENH264URL=""
   if [ "$SNAP_ARCH" = "armhf" ]; then
-    curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-android19.so.bz2
+    OPENH264URL="$OPENH264ARMURL"
   elif [ "$SNAP_ARCH" = "amd64" ]; then
-    curl -o $H264DIR/libopenh264.so.bz2 http://ciscobinary.openh264.org/libopenh264-$OPENH264VERSION-linux64.4.so.bz2
+    OPENH264URL="$OPENH264X64URL"
   fi
 
-  bunzip2 $H264DIR/libopenh264.so.bz2
+	if [ -n "$OPENH264URL" ]; then
+		curl -o $H264DIR/libopenh264.so.bz2 "$OPENH264URL"
+	  bunzip2 $H264DIR/libopenh264.so.bz2
+		echo "$H264VERSION" > $H264DIR/version
+	fi
 fi
 
 if [ ! -e $H264DIR/libopenh264.so.3 ]; then
