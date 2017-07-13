@@ -88,7 +88,7 @@ if [ ! -f $H264DIR/version -o "$(cat $H264DIR/version)" != "$OPENH264VERSION" -o
 	if [ -n "$OPENH264URL" ]; then
 		curl -o $H264DIR/libopenh264.so.bz2 "$OPENH264URL"
 	  bunzip2 $H264DIR/libopenh264.so.bz2
-		echo "$H264VERSION" > $H264DIR/version
+		echo "$OPENH264VERSION" > $H264DIR/version
 	fi
 fi
 
