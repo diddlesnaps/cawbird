@@ -1,5 +1,5 @@
 name: corebird
-version: "1.5.1"
+version: "1.6.0"
 grade: stable
 summary: CoreBird Twitter Client
 description: |
@@ -40,7 +40,7 @@ apps:
       - x11
 
 parts:
-  prepare:
+  gnome-platform:
     plugin: nil
     prepare: |
       echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-24/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-24.list
@@ -110,7 +110,7 @@ parts:
     stage-packages:
       - liborc-0.4-0
       - libpulse0
-    after: [libopenh264-library, prepare]
+    after: [libopenh264-library, gnome-platform]
     prime:
       - -etc
       - -usr/bin
@@ -131,7 +131,7 @@ parts:
       - --prefix=/usr
     build-packages: [libasound2-dev, libcairo2-dev, libpulse-dev]
     stage-packages: [libpulse0]
-    after: [gstreamer, prepare]
+    after: [gstreamer, gnome-platform]
     prime:
       - -etc
       - -usr/bin
@@ -167,7 +167,7 @@ parts:
       - libgnutls30
       - liborc-0.4-0
       - libpulse0
-    after: [gstreamer, gst-plugins-base, libopenh264-library, prepare]
+    after: [gstreamer, gst-plugins-base, libopenh264-library, gnome-platform]
     prime:
       - -etc
       - -usr/lib/gcc
@@ -244,7 +244,7 @@ parts:
     stage-packages:
       - liborc-0.4-0
       - libpulse0
-    after: [gstreamer, gst-plugins-base, libopenh264-library, prepare]
+    after: [gstreamer, gst-plugins-base, libopenh264-library, gnome-platform]
     prime:
       - -etc
       - -usr/lib/gcc
@@ -406,7 +406,7 @@ parts:
     stage-packages:
       - liborc-0.4-0
       - libpulse0
-    after: [gstreamer, gst-plugins-base, libopenh264-library, prepare]
+    after: [gstreamer, gst-plugins-base, libopenh264-library, gnome-platform]
     prime:
       - -usr/include
       - -usr/lib/gcc
@@ -417,25 +417,22 @@ parts:
 
   corebird:
     plugin: autotools
-    source: https://github.com/baedert/corebird/releases/download/1.5.1/corebird-1.5.1.tar.xz
-    prepare: |
-      apt install -yy libgspell-1-dev
+    source: https://github.com/baedert/corebird/releases/download/1.6/corebird-1.6.tar.xz
     configflags:
       - --prefix=/snap/corebird/current/usr
       - --disable-rpath
-      # - --disable-spellcheck
+      - --disable-spellcheck
     organize:
       snap/corebird/current/usr: usr
     build-packages:
       - libjson-glib-dev
-      - librest-dev
       - libsoup2.4-dev
       - libsqlite3-dev
       - libxml2-utils
       - valac
     # stage-packages:
-      # - libgspell-1
-      # - libcurl3
+    #   - libgspell-1
+    #   - libcurl3
     after:
       - desktop-gnome-platform
       - libopenh264-helper
@@ -443,7 +440,7 @@ parts:
       - gst-plugins-good
       - gst-plugins-bad
       - gst-plugins-libav
-      - prepare
+      - gnome-platform
     prime:
       - -usr/lib/gcc
       - -usr/share/doc
