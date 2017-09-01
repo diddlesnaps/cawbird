@@ -41,6 +41,7 @@ apps:
 parts:
   gnome-platform:
     plugin: nil
+    after: [desktop-gnome-platform]
     prepare: |
       echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-24/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-24.list
       apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 399B698EEA9EF163B6F9A0F62CC98497A1231595
@@ -199,8 +200,8 @@ parts:
       - --enable-gpl
       - --enable-orc
       - --prefix=/usr
-      - --with-libav-extra-configure="--disable-everything\ --enable-avcodec\ --enable-avformat\ --enable-decoder=aac,h264,h264_crystalhd,h264_cuvid,h264_mediacodec,h264_mmal,h264_qsv,h264_vda,h264_vdpau,mpeg4,mpeg4_crystalhd,mpeg4_cuvid,mpeg4_mediacodec,mpeg4_mmal,mpeg4_vdpau\ --enable-gnutls\ --enable-opengl\ --enable-outdev=opengl,pulse,xv\ --enable-parser=aac,h264,mpeg4video\ --enable-pic\ --enable-protocols=cache,data,file,hls,http,httpproxy,https,pipe,tls_gnutls,unix"
-      - --with-pkg-config-path="$SNAPCRAFT_STAGE/usr/local/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$(gcc --print-multiarch)/pkgconfig"
+      - '--with-libav-extra-configure=\"--disable-everything --enable-avcodec --enable-avformat --enable-decoder=aac,h264,h264_crystalhd,h264_cuvid,h264_mediacodec,h264_mmal,h264_qsv,h264_vda,h264_vdpau,mpeg4,mpeg4_crystalhd,mpeg4_cuvid,mpeg4_mediacodec,mpeg4_mmal,mpeg4_vdpau --enable-gnutls --enable-opengl --enable-outdev=opengl,pulse,xv --enable-parser=aac,h264,mpeg4video --enable-pic --enable-protocols=cache,data,file,hls,http,httpproxy,https,pipe,tls_gnutls,unix\"'
+      - '--with-pkg-config-path=\"$SNAPCRAFT_STAGE/usr/local/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$(gcc --print-multiarch)/pkgconfig\"'
     build-packages:
       - bison
       - flex
@@ -315,7 +316,7 @@ parts:
     source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.12.2.tar.xz
     configflags:
       - --prefix=/usr
-      - --with-pkg-config-path="$SNAPCRAFT_STAGE/usr/local/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$(gcc --print-multiarch)/pkgconfig"
+      - '--with-pkg-config-path=\"$SNAPCRAFT_STAGE/usr/local/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$(gcc --print-multiarch)/pkgconfig\"'
       - --disable-accurip
       - --disable-acm
       - --disable-adpcmdec
@@ -498,10 +499,9 @@ parts:
       - libxml2-utils
       - valac
     after:
-      - desktop-gnome-platform
       - gnome-platform
-      # - gst-plugins-bad
-      # - gst-plugins-good
+      - gst-plugins-bad
+      - gst-plugins-good
       - gst-plugins-libav
       - gstreamer
       # - gstreamer-vaapi
