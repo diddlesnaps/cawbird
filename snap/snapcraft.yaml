@@ -62,7 +62,7 @@ parts:
     prime:
       - bin/gstreamer-launch
       - bin/pulse-launch
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   libopenh264-helper:
     source: libopenh264-helper
@@ -89,7 +89,7 @@ parts:
       - usr/lib/**/libsasl2*
       - usr/lib/**/libwind*
       - usr/lib/**/sasl2
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   libopenh264-library:
     plugin: make
@@ -110,7 +110,7 @@ parts:
       - usr/lib/**/libvorbisenc*
       - usr/lib/**/pulseaudio
       - usr/local/lib/libopenh264.so*
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   gstreamer:
     plugin: autotools
@@ -145,7 +145,7 @@ parts:
       - usr/lib/libgst*
       - usr/libexec/gstreamer-1.0/gst-plugin-scanner
       - usr/share/locale/**/gstreamer*
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   # gstreamer-vaapi:
   #   plugin: autotools
@@ -191,7 +191,7 @@ parts:
       - -usr/lib/gstreamer-1.0/include
       - usr/lib/libgst*
       - usr/share/locale/**/gst-plugins-base*
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   gst-plugins-libav:
     plugin: autotools
@@ -228,7 +228,7 @@ parts:
       - usr/lib/libgst*
       - usr/lib/**/libva*
       - usr/share/locale/**/gst-plugins-libav*
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   gst-plugins-good:
     plugin: autotools
@@ -309,7 +309,7 @@ parts:
       - -usr/lib/gstreamer-1.0/include
       - usr/lib/libgst*
       - usr/share/locale/**/gst-plugins-good*
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   gst-plugins-bad:
     plugin: autotools
@@ -481,7 +481,7 @@ parts:
       - -usr/lib/gstreamer-1.0/include
       - usr/lib/libgst*
       - usr/share/locale/**/gst-plugins-bad-*
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
 
   corebird:
     plugin: autotools
@@ -513,4 +513,4 @@ parts:
       - usr/share/icons/**/corebird.png
       - usr/share/locale/**/corebird*
       - usr/share/metainfo/org.baedert.corebird.appdata.xml
-    build-attributes: [no-system-libraries]
+    # build-attributes: [no-system-libraries]
