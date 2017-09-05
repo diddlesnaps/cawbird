@@ -9,7 +9,6 @@ description: |
   Twitter accounts.
 icon: data/corebird.svg
 
-grade: stable
 confinement: strict
 
 slots:
