@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="assets/corebird.png" alt="Corebird">
+  <img src="data/hicolor/256x256/apps/corebird.png" alt="Corebird">
   <br />
   Corebird
 </h1>
