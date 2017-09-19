@@ -492,7 +492,7 @@ parts:
     organize:
       snap/corebird/current/usr: usr
     build-packages:
-			- gettext
+      - gettext
       - libjson-glib-dev
       - libsoup2.4-dev
       - libsqlite3-dev
