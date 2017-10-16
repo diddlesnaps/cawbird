@@ -28,6 +28,7 @@ apps:
     command: |
       desktop-launch pulse-launch libopenh264-launch gstreamer-launch $SNAP/usr/bin/corebird
     plugs:
+      - desktop
       - gnome-3-24-platform
       - gsettings
       - home
@@ -35,6 +36,7 @@ apps:
       - opengl
       - pulseaudio
       - unity7
+      - wayland
       - x11
 
 parts:
