@@ -18,10 +18,11 @@ slots:
     name: org.baedert.corebird
 
 plugs:
-  gnome-3-24-platform:
+  gnome-3-26-1604:
     interface: content
+    content: gnome-3-26-1604
     target: gnome-platform
-    default-provider: gnome-3-24:gnome-3-24-platform
+    default-provider: gnome-3-26-1604
 
 apps:
   corebird:
@@ -29,7 +30,7 @@ apps:
       desktop-launch pulse-launch libopenh264-launch gstreamer-launch $SNAP/usr/bin/corebird
     plugs:
       - desktop
-      - gnome-3-24-platform
+      - gnome-3-26-1604
       - gsettings
       - home
       - network
@@ -44,7 +45,7 @@ parts:
     plugin: nil
     after: [desktop-gnome-platform]
     prepare: |
-      echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-24/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-24.list
+      echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-26/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-24.list
       apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 399B698EEA9EF163B6F9A0F62CC98497A1231595
       apt update
       apt upgrade -yy
