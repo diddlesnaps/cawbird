@@ -20,9 +20,8 @@ slots:
 plugs:
   gnome-3-26-1604:
     interface: content
-    content: gnome-3-26-1604
-    target: gnome-platform
-    default-provider: gnome-3-26-1604
+    target: $SNAP/gnome-platform
+    default-provider: gnome-3-26-1604:gnome-3-26-1604
 
 apps:
   corebird:
@@ -30,7 +29,6 @@ apps:
       desktop-launch pulse-launch libopenh264-launch gstreamer-launch $SNAP/usr/bin/corebird
     plugs:
       - desktop
-      - gnome-3-26-1604
       - gsettings
       - home
       - network
