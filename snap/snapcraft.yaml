@@ -1,5 +1,5 @@
 name: corebird
-version: "1.6.0"
+version: "1.7.1"
 grade: stable
 summary: CoreBird Twitter Client
 description: |
@@ -26,7 +26,7 @@ plugs:
 apps:
   corebird:
     command: |
-      desktop-launch pulse-launch libopenh264-launch gstreamer-launch $SNAP/usr/bin/corebird
+      desktop-launch pulse-launch libopenh264-launch gstreamer-launch fontconfig-launch snapcraft-preload $SNAP/usr/bin/corebird
     plugs:
       - desktop
       - gsettings
@@ -50,19 +50,22 @@ parts:
     prime:
       - -*
 
-  gstreamer-launch:
+  helper-scripts:
     plugin: dump
     source: snap-files
     prepare: |
+      chmod +x fontconfig-launch
       chmod +x gstreamer-launch
       chmod +x pulse-launch
     organize:
+      fontconfig-launch: bin/fontconfig-launch
       gstreamer-launch: bin/gstreamer-launch
       pulse-launch: bin/pulse-launch
     prime:
+      - bin/fontconfig-launch
       - bin/gstreamer-launch
       - bin/pulse-launch
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]
 
   libopenh264-helper:
     source: libopenh264-helper
@@ -89,9 +92,10 @@ parts:
       - usr/lib/**/libsasl2*
       - usr/lib/**/libwind*
       - usr/lib/**/sasl2
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]
 
   libopenh264-library:
+    after: [libopenh264-helper]
     plugin: make
     source: https://github.com/cisco/openh264/archive/v1.7.0.tar.gz
     build-packages:
@@ -100,6 +104,9 @@ parts:
       - libpulse-dev
       - nasm
     stage-packages: [libpulse0]
+    install: |
+      find $SNAPCRAFT_PART_INSTALL/usr/local/lib/pkgconfig -name "*openh264*.pc" -exec \
+        sed -i "s|/usr/local/include|$SNAPCRAFT_STAGE/usr/local/include|g;s|/usr/local/lib|$SNAPCRAFT_STAGE/usr/local/lib|g" '{}' \;
     prime:
       - lib/libjson-c*
       - lib/libwrap*
@@ -110,15 +117,17 @@ parts:
       - usr/lib/**/libvorbisenc*
       - usr/lib/**/pulseaudio
       - usr/local/lib/libopenh264.so*
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]
 
   gstreamer:
+    after:
+      - gnome-platform
+      - libopenh264-library
     plugin: autotools
     source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.12.2.tar.xz
     configflags:
       - --prefix=/usr
       - --disable-benchmarks
-      - --disable-check
       - --disable-debug
       - --disable-examples
       - --disable-gst-debug
@@ -136,16 +145,19 @@ parts:
     stage-packages:
       - libpulse0
       - libxv1
-    after: [libopenh264-library, gnome-platform]
+    install: |
+      find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
+        sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
       - lib/libjson-c*
       - usr/lib/**/libXv.so*
+      - usr/lib/girepository-1.0
       - usr/lib/gstreamer-1.0
       - -usr/lib/gstreamer-1.0/include
       - usr/lib/libgst*
       - usr/libexec/gstreamer-1.0/gst-plugin-scanner
       - usr/share/locale/**/gstreamer*
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]
 
   # gstreamer-vaapi:
   #   plugin: autotools
@@ -178,30 +190,40 @@ parts:
   #     - usr/share/locale/*
 
   gst-plugins-base:
+    after:
+      - cairo
+      - gnome-platform
+      - gstreamer
+      - pango
     plugin: autotools
     source: http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.12.2.tar.xz
     configflags:
       - --prefix=/usr
-    build-packages: [libasound2-dev, libcairo2-dev, libpulse-dev]
+    build-packages: [libasound2-dev, libpulse-dev]
     stage-packages: [libpulse0]
-    after: [gstreamer, gnome-platform]
+    install: |
+      find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
+        sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
       - lib/libjson-c*
+      - usr/lib/girepository-1.0/*
       - usr/lib/gstreamer-1.0
       - -usr/lib/gstreamer-1.0/include
       - usr/lib/libgst*
       - usr/share/locale/**/gst-plugins-base*
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]
 
   gst-plugins-libav:
+    after:
+      - gnome-platform
+      - gst-plugins-base
+      - libopenh264-library
     plugin: autotools
     source: http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.12.2.tar.xz
     configflags:
+      - --prefix=/usr
       - --enable-gpl
       - --enable-orc
-      - --prefix=/usr
-      - '--with-libav-extra-configure=\"--disable-everything --enable-avcodec --enable-avformat --enable-decoder=aac,h264,h264_crystalhd,h264_cuvid,h264_mediacodec,h264_mmal,h264_qsv,h264_vda,h264_vdpau,mpeg4,mpeg4_crystalhd,mpeg4_cuvid,mpeg4_mediacodec,mpeg4_mmal,mpeg4_vdpau --enable-gnutls --enable-opengl --enable-outdev=opengl,pulse,xv --enable-parser=aac,h264,mpeg4video --enable-pic --enable-protocols=cache,data,file,hls,http,httpproxy,https,pipe,tls_gnutls,unix\"'
-      - '--with-pkg-config-path=\"$SNAPCRAFT_STAGE/usr/local/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$(gcc --print-multiarch)/pkgconfig\"'
     build-packages:
       - bison
       - flex
@@ -220,17 +242,22 @@ parts:
       - libva-x11-1
       - libva1
       - zlib1g
-    after: [gst-plugins-base, libopenh264-library, gnome-platform]
     prime:
       - lib/libjson-c*
+      - usr/lib/girepository-1.0/*
       - usr/lib/gstreamer-1.0
       - -usr/lib/gstreamer-1.0/include
       - usr/lib/libgst*
       - usr/lib/**/libva*
       - usr/share/locale/**/gst-plugins-libav*
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]
 
   gst-plugins-good:
+    after:
+      - gnome-platform
+      - gst-plugins-base
+      - gstreamer
+      - libopenh264-library
     plugin: autotools
     source: http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.12.2.tar.xz
     configflags:
@@ -298,25 +325,25 @@ parts:
       - libpulse-dev
     stage-packages:
       - libpulse0
+    prime:
+      - lib/libjson-c*
+      - usr/lib/girepository-1.0/*
+      - usr/lib/gstreamer-1.0
+      - -usr/lib/gstreamer-1.0/include
+      - usr/lib/libgst*
+      - usr/share/locale/**/gst-plugins-good*
+    build-attributes: [no-system-libraries]
+
+  gst-plugins-bad:
     after:
       - gnome-platform
       - gst-plugins-base
       - gstreamer
       - libopenh264-library
-    prime:
-      - lib/libjson-c*
-      - usr/lib/gstreamer-1.0
-      - -usr/lib/gstreamer-1.0/include
-      - usr/lib/libgst*
-      - usr/share/locale/**/gst-plugins-good*
-    # build-attributes: [no-system-libraries]
-
-  gst-plugins-bad:
     plugin: autotools
     source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.12.2.tar.xz
     configflags:
       - --prefix=/usr
-      - '--with-pkg-config-path=\"$SNAPCRAFT_STAGE/usr/local/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$(gcc --print-multiarch)/pkgconfig\"'
       - --disable-accurip
       - --disable-acm
       - --disable-adpcmdec
@@ -469,29 +496,166 @@ parts:
     stage-packages:
       - libneon27-gnutls
       - libpulse0
-    after:
-      - gnome-platform
-      - gst-plugins-base
-      - gstreamer
-      - libopenh264-library
+    install: |
+      find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
+        sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
       - lib/libjson-c*
       - usr/lib/**/libneon*
+      - usr/lib/girepository-1.0/*
       - usr/lib/gstreamer-1.0
       - -usr/lib/gstreamer-1.0/include
       - usr/lib/libgst*
       - usr/share/locale/**/gst-plugins-bad-*
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]
 
-  corebird:
+  harfbuzz:
+    after: [gnome-platform]
     plugin: autotools
-    source: https://github.com/baedert/corebird/releases/download/1.6/corebird-1.6.tar.xz
+    source: https://github.com/behdad/harfbuzz/releases/download/1.6.3/harfbuzz-1.6.3.tar.bz2
+    configflags:
+      - --prefix=/usr
+      - --sysconfdir=/etc
+      - --without-cairo
+      - --with-graphite2
+      - --with-glib
+      - --with-gobject
+      - --with-icu
+      - --enable-introspection
+    build-packages:
+      - gobject-introspection
+      - libgirepository1.0-dev
+      - libglib2.0-dev
+      - libgraphite2-dev
+      - libicu-dev
+    install: |
+      sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
+      sed -i "s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
+    prime:
+      - usr/lib/libharfbuzz*
+    build-attributes: [no-system-libraries]
+
+  freetype:
+    after: [harfbuzz]
+    plugin: autotools
+    source: https://download.savannah.gnu.org/releases/freetype/freetype-2.8.1.tar.bz2
+    configflags:
+      - --prefix=/usr
+      - --sysconfdir=/etc
+      - --disable-static
+    build-packages:
+      - libbz2-dev
+      - libpng12-dev
+      - zlib1g-dev
+    install: |
+      sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/freetype2.pc
+      sed -i "s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/freetype2.pc
+    prime:
+      - etc/fonts/*
+      - usr/lib/libfreetype*
+    build-attributes: [no-system-libraries]
+
+  fontconfig:
+    after: [freetype]
+    plugin: autotools
+    source: https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.6.tar.bz2
     configflags:
       - --prefix=/snap/corebird/current/usr
-      - --disable-rpath
-      - --disable-spellcheck
+      - --sysconfdir=/snap/corebird/current/etc
+      - --enable-iconv
+    build-packages:
+      - gperf
+      - libexpat1-dev
+      - libxml2-dev
+    stage-packages:
+      - fonts-dejavu-core
+      - fonts-deva
+      - fonts-droid-fallback
+      - fonts-gujr
+      - fonts-guru
+      - fonts-indic
+      - fonts-knda
+      - fonts-mlym
+      - fonts-orya
+      - fonts-taml
+      - fonts-telu
     organize:
       snap/corebird/current/usr: usr
+      snap/corebird/current/etc: etc
+    prime:
+      - etc/fonts
+      - usr/bin/fc-*
+      - usr/lib/libfontconfig*
+      - usr/share/fontconfig
+      - usr/share/fonts
+    build-attributes: [no-system-libraries]
+
+  cairo:
+    after: [fontconfig]
+    plugin: autotools
+    source: http://cairographics.org/snapshots/cairo-1.15.8.tar.xz
+    configflags:
+      - --prefix=/usr
+    build-packages:
+      - libegl1-mesa-dev
+      - libgl1-mesa-dev
+      - libpng12-dev
+      - libwayland-dev
+      - libx11-dev
+      - libxcb-shm0-dev
+      - libxcb1-dev
+    install: |
+      find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*cairo*.pc" -exec \
+        sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
+    prime:
+      - usr/lib/cairo/*
+      - usr/lib/libcairo*
+    build-attributes: [no-system-libraries]
+
+  pango:
+    after: [cairo, fontconfig]
+    plugin: autotools
+    source: http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.13.tar.xz
+    configflags:
+      - --prefix=/usr
+    build-packages:
+      - gobject-introspection
+      - libgirepository1.0-dev
+      - libglib2.0-dev
+      - libwayland-dev
+      - libx11-dev
+      - libxft-dev
+      - libxrender-dev
+    install: |
+      find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*pango*.pc" -exec \
+        sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
+    prime:
+      - usr/lib/girepository-1.0/Pango*.typelib
+      - usr/lib/libpango*
+    build-attributes: [no-system-libraries]
+
+  corebird:
+    after:
+      - cairo
+      - gnome-platform
+      - gst-plugins-bad
+      - gst-plugins-good
+      - gst-plugins-libav
+      - gstreamer
+      # - gstreamer-vaapi
+      - pango
+      - snapcraft-preload
+    plugin: autotools
+    source: https://github.com/baedert/corebird/releases/download/1.7.1/corebird-1.7.1.tar.xz
+    # for some reason building from git is failing due to the gst heck in the configure script
+    prepare: |
+      apt-get install -yqq libgspell-1-dev
+      # this package doesn't exist in xenial so we can't add
+      # it to build-packages and rely on it upgrading by the
+      # gnome-platform part's apt upgrade step.
+    configflags:
+      - --prefix=/usr
+      - --disable-rpath
     build-packages:
       - gettext
       - libjson-glib-dev
@@ -499,13 +663,6 @@ parts:
       - libsqlite3-dev
       - libxml2-utils
       - valac
-    after:
-      - gnome-platform
-      - gst-plugins-bad
-      - gst-plugins-good
-      - gst-plugins-libav
-      - gstreamer
-      # - gstreamer-vaapi
     prime:
       - usr/bin/corebird
       - usr/share/applications/org.baedert.corebird.desktop
@@ -514,4 +671,4 @@ parts:
       - usr/share/icons/**/corebird.png
       - usr/share/locale/**/corebird*
       - usr/share/metainfo/org.baedert.corebird.appdata.xml
-    # build-attributes: [no-system-libraries]
+    build-attributes: [no-system-libraries]

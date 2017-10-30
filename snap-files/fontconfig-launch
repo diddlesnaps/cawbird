@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export LD_LIBRARY_PATH=$SNAP/usr/lib:$LD_LIBRARY_PATH
+export PATH=$SNAP/usr/bin:$PATH
+export FONTCONFIG_FILE=$SNAP/etc/fonts/fonts.conf
+export FONTCONFIG_PATH=$SNAP/etc/fonts/conf.d
+
+exec "$@"
