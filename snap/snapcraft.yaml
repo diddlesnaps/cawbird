@@ -1,5 +1,5 @@
 name: corebird
-version: "1.7.2"
+version: "1.7.3"
 grade: stable
 summary: CoreBird Twitter Client
 description: |
@@ -101,6 +101,7 @@ parts:
     source: https://github.com/cisco/openh264/archive/v1.7.0.tar.gz
     build-packages:
       - g++
+      - gettext
       - libasound2-dev
       - libpulse-dev
       - nasm
@@ -125,7 +126,7 @@ parts:
       - gnome-platform
       - libopenh264-library
     plugin: autotools
-    source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.12.2.tar.xz
+    source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.12.3.tar.xz
     configflags:
       - --prefix=/usr
       - --disable-benchmarks
@@ -139,6 +140,7 @@ parts:
     build-packages:
       - bison
       - flex
+      - gettext
       - libasound2-dev
       - liborc-0.4-dev
       - libpulse-dev
@@ -162,7 +164,7 @@ parts:
 
   # gstreamer-vaapi:
   #   plugin: autotools
-  #   source: https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-1.12.2.tar.xz
+  #   source: https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-1.12.3.tar.xz
   #   configflags:
   #     - --prefix=/usr
   #   build-packages:
@@ -197,10 +199,13 @@ parts:
       - gstreamer
       - pango
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.12.2.tar.xz
+    source: http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.12.3.tar.xz
     configflags:
       - --prefix=/usr
-    build-packages: [libasound2-dev, libpulse-dev]
+    build-packages:
+      - gettext
+      - libasound2-dev
+      - libpulse-dev
     stage-packages: [libpulse0]
     install: |
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
@@ -220,7 +225,7 @@ parts:
       - gst-plugins-base
       - libopenh264-library
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.12.2.tar.xz
+    source: http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.12.3.tar.xz
     configflags:
       - --prefix=/usr
       - --enable-gpl
@@ -228,6 +233,7 @@ parts:
     build-packages:
       - bison
       - flex
+      - gettext
       - libasound2-dev
       - libgnutls28-dev
       - liborc-0.4-dev
@@ -260,7 +266,7 @@ parts:
       - gstreamer
       - libopenh264-library
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.12.2.tar.xz
+    source: http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.12.3.tar.xz
     configflags:
       - --prefix=/usr
       - --disable-aalib
@@ -321,6 +327,7 @@ parts:
     build-packages:
       - bison
       - flex
+      - gettext
       - libasound2-dev
       - liborc-0.4-dev
       - libpulse-dev
@@ -342,7 +349,7 @@ parts:
       - gstreamer
       - libopenh264-library
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.12.2.tar.xz
+    source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.12.3.tar.xz
     configflags:
       - --prefix=/usr
       - --disable-accurip
@@ -487,6 +494,7 @@ parts:
     build-packages:
       - bison
       - flex
+      - gettext
       - libasound2-dev
       - libgl1-mesa-dev
       - libgles2-mesa-dev
@@ -524,6 +532,7 @@ parts:
       - --with-icu
       - --enable-introspection
     build-packages:
+      - gettext
       - gobject-introspection
       - libgirepository1.0-dev
       - libglib2.0-dev
@@ -546,6 +555,7 @@ parts:
       - --sysconfdir=/etc
       - --disable-static
     build-packages:
+      - gettext
       - libbz2-dev
       - libpng12-dev
       - zlib1g-dev
@@ -567,6 +577,7 @@ parts:
       - --sysconfdir=/snap/corebird/current/etc
       - --enable-iconv
     build-packages:
+      - gettext
       - gperf
       - libexpat1-dev
       - libxml2-dev
@@ -601,6 +612,7 @@ parts:
     configflags:
       - --prefix=/usr
     build-packages:
+      - gettext
       - libegl1-mesa-dev
       - libgl1-mesa-dev
       - libpng12-dev
@@ -624,6 +636,7 @@ parts:
     configflags:
       - --prefix=/usr
     build-packages:
+      - gettext
       - gobject-introspection
       - libgirepository1.0-dev
       - libglib2.0-dev
@@ -652,7 +665,7 @@ parts:
       - pango
       - snapcraft-preload
     plugin: autotools
-    source: https://github.com/baedert/corebird/releases/download/1.7.2/corebird-1.7.2.tar.xz
+    source: https://github.com/baedert/corebird/releases/download/1.7.3/corebird-1.7.3.tar.xz
     # source: https://github.com/baedert/corebird.git
     # source-tag: '1.7.2'
     # for some reason building from git is failing due to the gst check in the
