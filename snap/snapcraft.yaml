@@ -26,7 +26,7 @@ plugs:
 apps:
   corebird:
     command: |
-      desktop-launch pulse-launch libopenh264-launch gstreamer-launch fontconfig-launch snapcraft-preload $SNAP/usr/bin/corebird
+      desktop-launch pulse-launch libopenh264-launch gstreamer-launch fontconfig-launch $SNAP/usr/bin/corebird
     plugs:
       - desktop
       - gsettings
@@ -663,7 +663,6 @@ parts:
       - gstreamer
       # - gstreamer-vaapi
       - pango
-      - snapcraft-preload
     plugin: autotools
     source: https://github.com/baedert/corebird/releases/download/1.7.3/corebird-1.7.3.tar.xz
     # source: https://github.com/baedert/corebird.git
