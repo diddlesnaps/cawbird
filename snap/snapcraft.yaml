@@ -581,18 +581,6 @@ parts:
       - gperf
       - libexpat1-dev
       - libxml2-dev
-    stage-packages:
-      - fonts-dejavu-core
-      - fonts-deva
-      - fonts-droid-fallback
-      - fonts-gujr
-      - fonts-guru
-      - fonts-indic
-      - fonts-knda
-      - fonts-mlym
-      - fonts-orya
-      - fonts-taml
-      - fonts-telu
     organize:
       snap/corebird/current/usr: usr
       snap/corebird/current/etc: etc
@@ -601,7 +589,6 @@ parts:
       - usr/bin/fc-*
       - usr/lib/libfontconfig*
       - usr/share/fontconfig
-      - usr/share/fonts
       - usr/share/locale/*
     build-attributes: [no-system-libraries]
 
