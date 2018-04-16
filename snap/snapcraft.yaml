@@ -66,6 +66,11 @@ parts:
     - bin/pulse-launch
     build-attributes: [no-system-libraries]
 
+  alsa:
+    after: [alsa-lib, alsa-plugins]
+  alsa-plugins:
+    after: [alsa-lib]
+
   libopenh264-helper:
     source: libopenh264-helper
     source-subdir: libopenh264
@@ -84,6 +89,7 @@ parts:
     - usr/lib/**/libheimbase*
     - usr/lib/**/libheimntlm*
     - usr/lib/**/libhx509*
+    - usr/lib/**/libkrb5.so*
     - usr/lib/**/liblber*
     - usr/lib/**/libldap*
     - usr/lib/**/libroken*
@@ -125,7 +131,8 @@ parts:
     - alsa
     - libopenh264-library
     plugin: autotools
-    source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.12.3.tar.xz
+    source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.13.1.tar.xz
+    source-checksum: sha256/7d2dc896d533cf89f08ce41e3ae3914b1ef9b463ae16c3ef689367e114495804
     configflags:
     - --prefix=/usr
     - --disable-benchmarks
@@ -160,36 +167,6 @@ parts:
     - usr/share/locale/*
     build-attributes: [no-system-libraries]
 
-  # gstreamer-vaapi:
-  #   plugin: autotools
-  #   source: https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-1.12.3.tar.xz
-  #   configflags:
-  #     - --prefix=/usr
-  #   build-packages:
-  #     - libgles2-mesa-dev
-  #     - libv4l-dev
-  #     - libva-dev
-  #     - libwayland-dev
-  #     - libxrandr-dev
-  #   stage-packages:
-  #     - libv4l-0
-  #     - libva-wayland1
-  #     - libva-x11-1
-  #     - libva1
-  #   after:
-  #     - gnome-platform
-  #     - gst-plugins-bad
-  #     - gst-plugins-base
-  #     - gstreamer
-  #   prime:
-  #     - usr/lib/gstreamer-1.0
-  #     - usr/lib/libgst*
-  #     - usr/lib/**/libboost*
-  #     - usr/lib/**/libcapnp*
-  #     - usr/lib/**/libv4l*
-  #     - usr/lib/**/libva*
-  #     - usr/share/locale/*
-
   gst-plugins-base:
     after:
     - gnome-platform
@@ -198,7 +175,8 @@ parts:
     - cairo
     - pango
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.12.3.tar.xz
+    source: https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.13.1.tar.xz
+    source-checksum: sha256/51cd6cb976d5f6b1cd46b800352cf11fca7af3d971e23fe38e1773505b29e21d
     configflags:
     - --prefix=/usr
     build-packages:
@@ -228,7 +206,8 @@ parts:
     - libopenh264-library
     - gst-plugins-base
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.12.3.tar.xz
+    source: https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.13.1.tar.xz
+    source-checksum: sha256/dd47a1cb69a74699d4e21ef5730d681d4511a97e9128d943b57de02d0e5a5a03
     configflags:
     - --prefix=/usr
     - --enable-gpl
@@ -269,7 +248,8 @@ parts:
     - gstreamer
     - gst-plugins-base
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.12.3.tar.xz
+    source: http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.13.1.tar.xz
+    source-checksum: sha256/136cc29d032e3f15035aa5e905cc85cd7882b40a68bf3f7cc9cb5e8cb8b14154
     configflags:
     - --prefix=/usr
     - --disable-aalib
@@ -352,7 +332,8 @@ parts:
     - gstreamer
     - gst-plugins-base
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.12.3.tar.xz
+    source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.13.1.tar.xz
+    source-checksum: sha256/03e76a7b89626b03657dc2a9521f365223d2ec0ec41d55ed2b066f1fa3953b34
     configflags:
     - --prefix=/usr
     - --disable-accurip
@@ -654,10 +635,6 @@ parts:
     # - gstreamer-vaapi
     plugin: autotools
     source: https://github.com/baedert/corebird/releases/download/$SNAPCRAFT_PROJECT_VERSION/corebird-$SNAPCRAFT_PROJECT_VERSION.tar.xz
-    # source: https://github.com/baedert/corebird.git
-    # source-tag: '1.7.2'
-    # for some reason building from git is failing due to the gst check in the
-    # configure script
     prepare: |
       apt-get install -yqq libgspell-1-dev
       # this package doesn't exist in xenial so we can't add it to
