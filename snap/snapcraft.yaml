@@ -131,8 +131,8 @@ parts:
     - alsa
     - libopenh264-library
     plugin: autotools
-    source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.13.1.tar.xz
-    source-checksum: sha256/7d2dc896d533cf89f08ce41e3ae3914b1ef9b463ae16c3ef689367e114495804
+    source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.12.5.tar.xz
+    source-checksum: sha256/9f750d845a326880b24c1ccc913d07df8f38cd9e63009714795ae175b6c29c6a
     configflags:
     - --prefix=/usr
     - --disable-benchmarks
@@ -175,8 +175,8 @@ parts:
     - cairo
     - pango
     plugin: autotools
-    source: https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.13.1.tar.xz
-    source-checksum: sha256/51cd6cb976d5f6b1cd46b800352cf11fca7af3d971e23fe38e1773505b29e21d
+    source: https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.12.5.tar.xz
+    source-checksum: sha256/8fd9f25b65f3286f43530868b501a4e7cdc3f1568be78c75da716cd2559b712e
     configflags:
     - --prefix=/usr
     build-packages:
@@ -206,8 +206,8 @@ parts:
     - libopenh264-library
     - gst-plugins-base
     plugin: autotools
-    source: https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.13.1.tar.xz
-    source-checksum: sha256/dd47a1cb69a74699d4e21ef5730d681d4511a97e9128d943b57de02d0e5a5a03
+    source: https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.12.5.tar.xz
+    source-checksum: sha256/812b865f3936d0c5b30f766a126783c99fe00c166c1a7677d50790201c573878
     configflags:
     - --prefix=/usr
     - --enable-gpl
@@ -248,8 +248,8 @@ parts:
     - gstreamer
     - gst-plugins-base
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.13.1.tar.xz
-    source-checksum: sha256/136cc29d032e3f15035aa5e905cc85cd7882b40a68bf3f7cc9cb5e8cb8b14154
+    source: http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.12.5.tar.xz
+    source-checksum: sha256/2c84b23bbe06e40c99dece5ea4520b337a15aa4e7eba1290e6d14834e2005555
     configflags:
     - --prefix=/usr
     - --disable-aalib
@@ -332,8 +332,8 @@ parts:
     - gstreamer
     - gst-plugins-base
     plugin: autotools
-    source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.13.1.tar.xz
-    source-checksum: sha256/03e76a7b89626b03657dc2a9521f365223d2ec0ec41d55ed2b066f1fa3953b34
+    source: http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.12.5.tar.xz
+    source-checksum: sha256/40f82fa775ce8ecfc930fd13073e8643b90cba9b6f8dd2462ec45a93120c7d81
     configflags:
     - --prefix=/usr
     - --disable-accurip
