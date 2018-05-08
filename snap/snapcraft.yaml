@@ -42,7 +42,7 @@ parts:
   gnome-platform:
     plugin: nil
     after: [desktop-gnome-platform]
-    prepare: |
+    override-build: |
       echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-26/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-24.list
       apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 399B698EEA9EF163B6F9A0F62CC98497A1231595
       apt update
@@ -52,10 +52,11 @@ parts:
   helper-scripts:
     plugin: dump
     source: snap-files
-    prepare: |
+    override-build: |
       chmod +x fontconfig-launch
       chmod +x gstreamer-launch
       chmod +x pulse-launch
+      snapcraftctl build
     organize:
       fontconfig-launch: bin/fontconfig-launch
       gstreamer-launch: bin/gstreamer-launch
@@ -110,7 +111,8 @@ parts:
     - libpulse-dev
     - nasm
     stage-packages: [libpulse0]
-    install: |
+    override-build: |
+      snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/local/lib/pkgconfig -name "*openh264*.pc" -exec \
         sed -i "s|/usr/local/include|$SNAPCRAFT_STAGE/usr/local/include|g;s|/usr/local/lib|$SNAPCRAFT_STAGE/usr/local/lib|g" '{}' \;
     prime:
@@ -153,7 +155,8 @@ parts:
     stage-packages:
     - libpulse0
     - libxv1
-    install: |
+    override-build: |
+      snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
@@ -186,7 +189,8 @@ parts:
     stage-packages:
     - libfribidi0
     - libpulse0
-    install: |
+    override-build: |
+      snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
@@ -488,7 +492,8 @@ parts:
     stage-packages:
     - libneon27-gnutls
     - libpulse0
-    install: |
+    override-build: |
+      snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
@@ -521,7 +526,8 @@ parts:
     - libglib2.0-dev
     - libgraphite2-dev
     - libicu-dev
-    install: |
+    override-build: |
+      snapcraftctl build
       sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
       sed -i "s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
     prime:
@@ -542,7 +548,8 @@ parts:
     - libbz2-dev
     - libpng12-dev
     - zlib1g-dev
-    install: |
+    override-build: |
+      snapcraftctl build
       sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/freetype2.pc
       sed -i "s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/freetype2.pc
     prime:
@@ -590,7 +597,8 @@ parts:
     - libx11-dev
     - libxcb-shm0-dev
     - libxcb1-dev
-    install: |
+    override-build: |
+      snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*cairo*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
@@ -614,7 +622,8 @@ parts:
     - libx11-dev
     - libxft-dev
     - libxrender-dev
-    install: |
+    override-build: |
+      snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*pango*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
@@ -635,11 +644,12 @@ parts:
     # - gstreamer-vaapi
     plugin: autotools
     source: https://github.com/baedert/corebird/releases/download/$SNAPCRAFT_PROJECT_VERSION/corebird-$SNAPCRAFT_PROJECT_VERSION.tar.xz
-    prepare: |
+    override-build: |
       apt-get install -yqq libgspell-1-dev
       # this package doesn't exist in xenial so we can't add it to
       # build-packages and rely on it upgrading by the gnome-platform part's
       # apt upgrade step.
+      snapcraftctl build
     configflags:
     - --prefix=/usr
     - --disable-rpath
