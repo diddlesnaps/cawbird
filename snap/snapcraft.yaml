@@ -29,6 +29,7 @@ apps:
       desktop-launch pulse-launch alsa-launch libopenh264-launch gstreamer-launch fontconfig-launch $SNAP/usr/bin/corebird
     plugs:
     - desktop
+    - desktop-legacy
     - gsettings
     - home
     - network
@@ -42,8 +43,8 @@ parts:
   gnome-platform:
     plugin: nil
     after: [desktop-gnome-platform]
-    prepare: |
-      echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-26/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-24.list
+    override-build: |
+      echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-26/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-26.list
       apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 399B698EEA9EF163B6F9A0F62CC98497A1231595
       apt update
       apt upgrade -yy
@@ -82,22 +83,8 @@ parts:
     - bin/bunzip2
     - bin/libopenh264-launch
     - usr/bin/curl
-    - usr/lib/**/libasn1*
-    - usr/lib/**/libcurl-gnutls*
-    - usr/lib/**/libgssapi.so*
-    - usr/lib/**/libhcrypto*
-    - usr/lib/**/libheimbase*
-    - usr/lib/**/libheimntlm*
-    - usr/lib/**/libhx509*
-    - usr/lib/**/libkrb5.so*
-    - usr/lib/**/liblber*
-    - usr/lib/**/libldap*
-    - usr/lib/**/libroken*
-    - usr/lib/**/librtmp*
-    - usr/lib/**/libsasl2*
-    - usr/lib/**/libwind*
-    - usr/lib/**/sasl2
-    - usr/share/locale/*
+    - usr/lib
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   libopenh264-library:
@@ -114,14 +101,8 @@ parts:
       find $SNAPCRAFT_PART_INSTALL/usr/local/lib/pkgconfig -name "*openh264*.pc" -exec \
         sed -i "s|/usr/local/include|$SNAPCRAFT_STAGE/usr/local/include|g;s|/usr/local/lib|$SNAPCRAFT_STAGE/usr/local/lib|g" '{}' \;
     prime:
-    - lib/libjson-c*
-    - lib/libwrap*
-    - usr/lib/**/libasyncns*
-    - usr/lib/**/libFLAC*
-    - usr/lib/**/libpulse*
-    - usr/lib/**/libsndfile*
-    - usr/lib/**/libvorbisenc*
-    - usr/lib/**/pulseaudio
+    - lib
+    - usr/lib
     - usr/local/lib/libopenh264.so*
     build-attributes: [no-system-libraries]
 
@@ -157,14 +138,11 @@ parts:
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - lib/libjson-c*
-    - usr/lib/**/libXv.so*
-    - usr/lib/girepository-1.0
-    - usr/lib/gstreamer-1.0
-    - -usr/lib/gstreamer-1.0/include
-    - usr/lib/libgst*
+    - lib
+    - usr/lib
+    - -usr/lib/**/include
     - usr/libexec/gstreamer-1.0/gst-plugin-scanner
-    - usr/share/locale/*
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   gst-plugins-base:
@@ -190,13 +168,10 @@ parts:
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - lib/libjson-c*
-    - usr/lib/**/libfribidi.so*
-    - usr/lib/girepository-1.0/*
-    - usr/lib/gstreamer-1.0
-    - -usr/lib/gstreamer-1.0/include
-    - usr/lib/libgst*
-    - usr/share/locale/*
+    - lib
+    - usr/lib
+    - -usr/lib/**/include
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   gst-plugins-libav:
@@ -231,13 +206,10 @@ parts:
     - libva1
     - zlib1g
     prime:
-    - lib/libjson-c*
-    - usr/lib/girepository-1.0/*
-    - usr/lib/gstreamer-1.0
-    - -usr/lib/gstreamer-1.0/include
-    - usr/lib/libgst*
-    - usr/lib/**/libva*
-    - usr/share/locale/*
+    - lib
+    - usr/lib
+    - -usr/lib/**/include
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   gst-plugins-good:
@@ -316,12 +288,10 @@ parts:
     stage-packages:
     - libpulse0
     prime:
-    - lib/libjson-c*
-    - usr/lib/girepository-1.0/*
-    - usr/lib/gstreamer-1.0
-    - -usr/lib/gstreamer-1.0/include
-    - usr/lib/libgst*
-    - usr/share/locale/*
+    - lib
+    - usr/lib
+    - -usr/lib/**/include
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   gst-plugins-bad:
@@ -492,13 +462,10 @@ parts:
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - lib/libjson-c*
-    - usr/lib/**/libneon*
-    - usr/lib/girepository-1.0/*
-    - usr/lib/gstreamer-1.0
-    - -usr/lib/gstreamer-1.0/include
-    - usr/lib/libgst*
-    - usr/share/locale/*
+    - lib
+    - usr/lib
+    - -usr/lib/**/include
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   harfbuzz:
@@ -525,8 +492,8 @@ parts:
       sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
       sed -i "s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
     prime:
-    - usr/lib/libharfbuzz*
-    - usr/share/locale/*
+    - usr/lib
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   freetype:
@@ -546,9 +513,9 @@ parts:
       sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/freetype2.pc
       sed -i "s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|" $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/freetype2.pc
     prime:
-    - etc/fonts/*
-    - usr/lib/libfreetype*
-    - usr/share/locale/*
+    - etc/fonts
+    - usr/lib
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   fontconfig:
@@ -570,9 +537,9 @@ parts:
     prime:
     - etc/fonts
     - usr/bin/fc-*
-    - usr/lib/libfontconfig*
+    - usr/lib
     - usr/share/fontconfig
-    - usr/share/locale/*
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   cairo:
@@ -594,9 +561,8 @@ parts:
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*cairo*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - usr/lib/cairo/*
-    - usr/lib/libcairo*
-    - usr/share/locale/*
+    - usr/lib
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   pango:
@@ -618,9 +584,8 @@ parts:
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*pango*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - usr/lib/girepository-1.0/Pango*.typelib
-    - usr/lib/libpango*
-    - usr/share/locale/*
+    - usr/lib
+    - usr/share/locale
     build-attributes: [no-system-libraries]
 
   corebird:
@@ -653,11 +618,11 @@ parts:
     - valac
     prime:
     - usr/bin/corebird
-    - usr/lib/locale/*
+    - usr/lib
     - usr/share/applications/org.baedert.corebird.desktop
     - usr/share/dbus-1/services/org.baedert.corebird.service
     - usr/share/glib-2.0/schemas/org.baedert.corebird.gschema.xml
     - usr/share/icons/**/corebird.png
-    - usr/share/locale/*
+    - usr/share/locale
     - usr/share/metainfo/org.baedert.corebird.appdata.xml
     build-attributes: [no-system-libraries]
