@@ -1,33 +1,31 @@
 <h1 align="center">
-  <img src="data/hicolor/256x256/apps/corebird.png" alt="Corebird">
+  <img src="data/hicolor/256x256/apps/corebird.png" alt="Cawbird">
   <br />
-  Corebird
+  Cawbird
 </h1>
 
-<p align="center"><b>This is the snap for Corebird</b>, <i>"Native Gtk+ Twitter client for the Linux desktop"</i>. It works on Ubuntu, Fedora, Debian, and other major Linux
+<p align="center"><b>This is the snap for Cawbird</b>, <i>"Native Gtk+ Twitter client for the Linux desktop"</i>. It works on Ubuntu, Fedora, Debian, and other major Linux
 distributions.</p>
 
-<p align="center">
-<a href="https://build.snapcraft.io/user/snapcrafters/corebird"><img src="https://build.snapcraft.io/badge/snapcrafters/corebird.svg" alt="Snap Status"></a>
-</p>
+[![Snap Status](https://build.snapcraft.io/badge/diddlesnaps/cawbird.svg)](https://build.snapcraft.io/user/diddlesnaps/cawbird)
 
 ## Install
 
     sudo apt install snapd-xdg-open
-    sudo snap install corebird
+    sudo snap install cawbird
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
 
-![Corebird](snapcrafters-assets/screenshot.png?raw=true "Corebird")
+![Cawbird](snapcrafters-assets/screenshot.png?raw=true "Cawbird")
 
-<p align="center">Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with :gift_heart: by Snapcrafters</p>
+<p align="center">Published for <img src="https://raw.githubusercontent.com/anythingcodes/slack-emoji-for-techies/gh-pages/emoji/tux.png" align="top" width="24" /> with :gift_heart: by Snapcrafters</p>
 
 ## Remaining tasks
 
 Snapcrafters ([join us](https://forum.snapcraft.io/t/join-snapcrafters/1325))
 are working to land snap install documentation and
 the [snapcraft.yaml](https://github.com/snapcrafters/fork-and-rename-me/blob/master/snap/snapcraft.yaml)
-upstream so Corebird can authoritatively publish future releases.
+upstream so Cawbird can authoritatively publish future releases.
 
   - [x] Fork the [Snapcrafters template](https://github.com/snapcrafters/fork-and-rename-me) repository to your own GitHub account
   - [x] Rename the forked Snapcrafters template repository
