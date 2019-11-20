@@ -539,6 +539,8 @@ parts:
 
       git checkout "$(git describe --tags --abbrev=0 --match 'v*')"
       snapcraftctl set-version "$(git describe --tags | sed -e 's|^v||')"
+
+      sed -i 's|^Icon=.*|Icon=/usr/share/icons/hicolor/scalable/apps/uk.co.ibboard.cawbird.svg|' data/uk.co.ibboard.cawbird.desktop.in
     build-packages:
     - gettext
     - libgspell-1-dev
@@ -548,11 +550,3 @@ parts:
     - libxml2-utils
     - locales-all
     - valac
-    prime:
-    - usr/bin/cawbird
-    - usr/share/applications/uk.co.ibboard.cawbird.desktop
-    - usr/share/dbus-1/services/uk.co.ibboard.cawbird.service
-    - usr/share/glib-2.0/schemas/uk.co.ibboard.cawbird.gschema.xml
-    - usr/share/icons/**/cawbird.png
-    - usr/share/locale
-    - usr/share/metainfo/uk.co.ibboard.cawbird.appdata.xml
