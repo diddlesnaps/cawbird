@@ -94,22 +94,7 @@ parts:
       }
 
       export ALSA_CONFIG_PATH="\$SNAP/etc/asound.conf"
-
-      if [ -d "\$SNAP/usr/lib/alsa-lib" ]; then
-          append_dir LD_LIBRARY_PATH "\$SNAP/usr/lib/alsa-lib"
-      elif [ -d "\$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib" ]; then
-          append_dir LD_LIBRARY_PATH "\$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib"
-      fi
-      append_dir LD_LIBRARY_PATH "\$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
-
-      # Make PulseAudio socket available inside the snap-specific $XDG_RUNTIME_DIR
-      if [ -n "\$XDG_RUNTIME_DIR" ]; then
-          pulsenative="pulse/native"
-          pulseaudio_sockpath="\$XDG_RUNTIME_DIR/../\$pulsenative"
-          if [ -S "\$pulseaudio_sockpath" ]; then
-              export PULSE_SERVER="unix:\${pulseaudio_sockpath}"
-          fi
-      fi
+      append_dir LD_LIBRARY_PATH "\$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib"
 
       exec "\$@"
       EOF
@@ -121,9 +106,6 @@ parts:
       install -m755 -D -t $SNAPCRAFT_PART_INSTALL/snap/command-chain alsa-launch
     build-packages:
       - libasound2-dev
-    stage-packages:
-      - libasound2
-      - libasound2-plugins
 
   libopenh264-helper:
     source: https://github.com/diddlesnaps/libopenh264-helper.git
@@ -135,9 +117,22 @@ parts:
     prime:
     - bin/bunzip2
     - bin/libopenh264-launch
-    - lib
     - usr/bin/curl
-    - usr/lib
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasn1*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libcurl*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libgssapi*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libhcrypto*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libheim*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libhx509*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libkrb5*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/liblber*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libldap*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libnghttp*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpsl*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libroken*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/librtmp*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libsasl*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libwind*
 
   libopenh264-library:
     after: [alsa-mixin]
@@ -148,14 +143,11 @@ parts:
     - gettext
     - libpulse-dev
     - nasm
-    stage-packages: [libpulse0]
     override-build: |
       snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/local/lib/pkgconfig -name "*openh264*.pc" -exec \
         sed -i "s|/usr/local/include|$SNAPCRAFT_STAGE/usr/local/include|g;s|/usr/local/lib|$SNAPCRAFT_STAGE/usr/local/lib|g" '{}' \;
     prime:
-    - lib
-    - usr/lib
     - usr/local/lib/libopenh264.so*
 
   gstreamer-helper:
@@ -190,18 +182,16 @@ parts:
     - libpulse-dev
     - libxv-dev
     stage-packages:
-    - libpulse0
     - libxv1
     override-build: |
       snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - lib
-    - usr/lib
-    - -usr/lib/pkgconfig
+    - usr/lib/gstreamer-1.0/*.so
+    - usr/lib/libgst*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXv*
     - usr/libexec/gstreamer-1.0/gst-plugin-scanner
-    - usr/share/locale
 
   gst-plugins-base:
     after:
@@ -219,16 +209,14 @@ parts:
     - libpulse-dev
     stage-packages:
     - libfribidi0
-    - libpulse0
     override-build: |
       snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - lib
-    - usr/lib
-    - -usr/lib/pkgconfig
-    - usr/share/locale
+    - usr/lib/gstreamer-1.0/*.so
+    - usr/lib/libgst*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libfribidi*
 
   gst-plugins-libav:
     after:
@@ -256,15 +244,13 @@ parts:
     - yasm
     - zlib1g-dev
     stage-packages:
-    - libpulse0
     - libva-wayland2
     - libva-x11-2
     - libva2
-    - zlib1g
     prime:
-    - lib
-    - usr/lib
-    - -usr/lib/**/include
+    - usr/lib/gstreamer-1.0/*.so
+    - usr/lib/libgst*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libva*
 
   gst-plugins-good:
     after:
@@ -339,12 +325,9 @@ parts:
     - gettext
     - liborc-0.4-dev
     - libpulse-dev
-    stage-packages:
-    - libpulse0
     prime:
-    - lib
-    - usr/lib
-    - usr/share/locale
+    - usr/lib/gstreamer-1.0/*.so
+    - usr/lib/libgst*
 
   gst-plugins-bad:
     after:
@@ -509,16 +492,14 @@ parts:
     - nettle-dev
     stage-packages:
     - libneon27-gnutls
-    - libpulse0
     override-build: |
       snapcraftctl build
       find $SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig -name "*gstreamer*.pc" -exec \
         sed -i "s|/usr/include|$SNAPCRAFT_STAGE/usr/include|g;s|/usr/lib|$SNAPCRAFT_STAGE/usr/lib|g" '{}' \;
     prime:
-    - lib
-    - usr/lib
-    - -usr/lib/pkgconfig
-    - usr/share/locale
+    - usr/lib/gstreamer-1.0/*.so
+    - usr/lib/libgst*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libneon-gnutls*
 
   cawbird:
     after:
