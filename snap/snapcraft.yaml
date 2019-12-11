@@ -46,8 +46,8 @@ layout:
     bind-file: $SNAP_DATA/etc/ld.so.cache
 
 environment:
-  FINAL_BINARY: $SNAP/usr/bin/cawbird
   ALSA_CONFIG_PATH: $SNAP/etc/asound.conf
+  FINAL_BINARY: $SNAP/usr/bin/cawbird
   LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
 
 apps:
