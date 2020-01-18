@@ -44,6 +44,8 @@ slots:
 layout:
   /etc/ld.so.cache:
     bind-file: $SNAP_DATA/etc/ld.so.cache
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0:
+    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0
 
 environment:
   ALSA_CONFIG_PATH: $SNAP/etc/asound.conf
