@@ -14,6 +14,7 @@ apps:
     - gnome-3-28
     plugs:
     - audio-playback
+    - audio-record
     - desktop
     - desktop-legacy
     - gsettings
@@ -35,11 +36,11 @@ description: "Cawbird is a modern and lightweight Twitter client for the GNOME 3
   Corebird build on his personal Open Build Service account[1].\n\nDue to changes\
   \ in the Twitter API[2], Cawbird has the following limitations:\n\n- Cawbird will\
   \ update every two minutes\n- Cawbird does not get notified of the following, which\
-  \ will be refreshed on\nrestart:\n    - Unfavourite\n    - Follow/Unfollow\n   \
-  \ - Block/Unblock\n    - Mute/Unmute\n    - DM deletion\n    - Some list changes\n\
+  \ will be refreshed on restart:\n    - Unfavourite\n    - Follow/Unfollow\n    -\
+  \ Block/Unblock\n    - Mute/Unmute\n    - DM deletion\n    - Some list changes\n\
   \nAll limitations are limitations imposed by Twitter and are not the fault of the\n\
   Cawbird client.\n\n[1]: https://build.opensuse.org/project/show/home:IBBoard:desktop\n\
-  [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction"
+  [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction\n"
 environment:
   FINAL_BINARY: $SNAP/usr/bin/cawbird
   LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
@@ -57,29 +58,9 @@ parts:
     after: []
     build-packages:
     - libasound2-dev
-    override-build: 'set -eux
-
-      install -m644 -D -t "$SNAPCRAFT_PART_INSTALL/etc" asound.conf
-
-      install -m755 -D -t "$SNAPCRAFT_PART_INSTALL/snap/command-chain" alsa-launch
-
-      '
-    override-pull: "set -eux\ncat > asound.conf <<EOF\npcm.!default {\n    type pulse\n\
-      \    fallback \"sysdefault\"\n    hint {\n        show on\n        description\
-      \ \"Default ALSA Output (currently PulseAudio Sound Server)\"\n    }\n}\nctl.!default\
-      \ {\n    type pulse\n    fallback \"sysdefault\"\n}\nEOF\ncat > alsa-launch\
-      \ <<EOF\n#!/bin/bash\nexport ALSA_CONFIG_PATH=\"\\$SNAP/etc/asound.conf\"\n\n\
-      if [ -d \"\\$SNAP/usr/lib/alsa-lib\" ]; then\n    export LD_LIBRARY_PATH=\"\\\
-      $LD_LIBRARY_PATH:\\$SNAP/usr/lib/alsa-lib\"\nelif [ -d \"\\$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib\"\
-      \ ]; then\n    export LD_LIBRARY_PATH=\"\\$LD_LIBRARY_PATH:\\$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib\"\
-      \nfi\nexport LD_LIBRARY_PATH=\"\\$LD_LIBRARY_PATH:\\$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio\"\
-      \n\n# Make PulseAudio socket available inside the snap-specific \\$XDG_RUNTIME_DIR\n\
-      if [ -n \"\\$XDG_RUNTIME_DIR\" ]; then\n    pulsenative=\"pulse/native\"\n \
-      \   pulseaudio_sockpath=\"\\$XDG_RUNTIME_DIR/../\\$pulsenative\"\n    if [ -S\
-      \ \"\\$pulseaudio_sockpath\" ]; then\n        export PULSE_SERVER=\"unix:\\\
-      ${pulseaudio_sockpath}\"\n    fi\nfi\n\nexec \"\\$@\"\nEOF\nchmod +x alsa-launch\n"
-    plugin: nil
-    source: https://github.com/diddledan/snapcraft-alsa.git
+    plugin: dump
+    source: https://github.com/diddlesnaps/snapcraft-alsa.git
+    source-subdir: snapcraft-assets
     stage-packages:
     - libasound2
     - libasound2-plugins
@@ -100,9 +81,7 @@ parts:
     - valac
     meson-parameters:
     - -Dprefix=/usr
-    override-pull: '
-
-      snapcraftctl pull
+    override-pull: 'snapcraftctl pull
 
 
       git checkout "$(git describe --tags --abbrev=0 --match ''v*'')"
@@ -141,28 +120,15 @@ parts:
     - gtk-locales
     - scripts
     build-snaps:
-    - core18
     - gtk-common-themes
     - gnome-3-28-1804
-    override-prime: 'set -eux
-
-      cd "/snap/core18/current"
-
-      find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
-
-
-      cd "/snap/gtk-common-themes/current"
-
-      find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
-
-
-      cd "/snap/gnome-3-28-1804/current"
-
-      find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
-
-
-
-      '
+    override-prime: "set -eux\ncd \"/snap/gtk-common-themes/current\"\nfind . -type\
+      \ f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\" \"$SNAPCRAFT_PRIME/usr/{}\", \\;\n\
+      \ncd \"/snap/gnome-3-28-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
+      \ \"$SNAPCRAFT_PRIME/usr/{}\", \\;\n\n\nfor CRUFT in bug lintian man; do\n \
+      \   rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT\ndone\nfind $SNAPCRAFT_PRIME/usr/share/doc/\
+      \ -type f -not -name 'copyright' -delete\nfind $SNAPCRAFT_PRIME/usr/share -type\
+      \ d -empty -delete\n"
     plugin: nil
   desktop-settings-build:
     after:
@@ -185,7 +151,7 @@ parts:
   desktop-settings-packages:
     after:
     - alsa-mixin
-    - gnome-extension
+    - gnome-3-28-extension
     build-packages:
     - libglib2.0-bin
     plugin: nil

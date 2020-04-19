@@ -14,34 +14,34 @@ snapcraft {
     "adopt-info": "cawbird",
 
     summary: "Cawbird Twitter Client (Corebird fork)",
-    description:
-"Cawbird is a modern and lightweight Twitter client for the GNOME 3 desktop. It
-features inline image and video preview, creation of lists and favorites,
-filtering of tweets and full text search. Cawbird is able to manage multiple
-Twitter accounts.
+    description: |||
+        Cawbird is a modern and lightweight Twitter client for the GNOME 3 desktop. It
+        features inline image and video preview, creation of lists and favorites,
+        filtering of tweets and full text search. Cawbird is able to manage multiple
+        Twitter accounts.
 
-Cawbird is a fork of Corebird, which became unsupported after Twitter disabled
-the streaming API. Cawbird works with the new APIs and includes a few fixes
-and modifications that have historically been patched in to IBBoard's custom
-Corebird build on his personal Open Build Service account[1].
+        Cawbird is a fork of Corebird, which became unsupported after Twitter disabled
+        the streaming API. Cawbird works with the new APIs and includes a few fixes
+        and modifications that have historically been patched in to IBBoard's custom
+        Corebird build on his personal Open Build Service account[1].
 
-Due to changes in the Twitter API[2], Cawbird has the following limitations:
+        Due to changes in the Twitter API[2], Cawbird has the following limitations:
 
-- Cawbird will update every two minutes
-- Cawbird does not get notified of the following, which will be refreshed on
-restart:
-    - Unfavourite
-    - Follow/Unfollow
-    - Block/Unblock
-    - Mute/Unmute
-    - DM deletion
-    - Some list changes
+        - Cawbird will update every two minutes
+        - Cawbird does not get notified of the following, which will be refreshed on restart:
+            - Unfavourite
+            - Follow/Unfollow
+            - Block/Unblock
+            - Mute/Unmute
+            - DM deletion
+            - Some list changes
 
-All limitations are limitations imposed by Twitter and are not the fault of the
-Cawbird client.
+        All limitations are limitations imposed by Twitter and are not the fault of the
+        Cawbird client.
 
-[1]: https://build.opensuse.org/project/show/home:IBBoard:desktop
-[2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction",
+        [1]: https://build.opensuse.org/project/show/home:IBBoard:desktop
+        [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction
+    |||,
 
     slots: {
         "dbus-cawbird": {
@@ -104,15 +104,14 @@ Cawbird client.
             "meson-parameters": [
                 "-Dprefix=/usr",
             ],
-            "override-pull":
-"
-snapcraftctl pull
+            "override-pull": |||
+                snapcraftctl pull
 
-git checkout \"$(git describe --tags --abbrev=0 --match 'v*')\"
-snapcraftctl set-version \"$(git describe --tags | sed -e 's|^v||')\"
+                git checkout "$(git describe --tags --abbrev=0 --match 'v*')"
+                snapcraftctl set-version "$(git describe --tags | sed -e 's|^v||')"
 
-sed -i 's|^Icon=.*|Icon=/usr/share/icons/hicolor/scalable/apps/uk.co.ibboard.cawbird.svg|' data/uk.co.ibboard.cawbird.desktop.in
-",
+                sed -i 's|^Icon=.*|Icon=/usr/share/icons/hicolor/scalable/apps/uk.co.ibboard.cawbird.svg|' data/uk.co.ibboard.cawbird.desktop.in
+            |||,
             "build-packages": [
                 "gettext",
                 "libasound2-dev",
@@ -144,4 +143,4 @@ sed -i 's|^Icon=.*|Icon=/usr/share/icons/hicolor/scalable/apps/uk.co.ibboard.caw
 + gtk_theming()
 + gtk_locales()
 + alsa()
-+ cleanup(["core18", "gtk-common-themes", "gnome-3-28-1804"])
++ cleanup(["gtk-common-themes", "gnome-3-28-1804"])
