@@ -11,7 +11,7 @@ apps:
     common-id: uk.co.ibboard.cawbird.desktop
     desktop: usr/share/applications/cawbird.desktop
     extensions:
-    - gnome-3-28
+    - gnome-3-34
     plugs:
     - audio-playback
     - audio-record
@@ -43,7 +43,9 @@ description: "Cawbird is a modern and lightweight Twitter client for the GNOME 3
   [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction\n"
 environment:
   FINAL_BINARY: $SNAP/usr/bin/cawbird
-  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+  GIO_EXTRA_MODULES: $SNAP/usr/lib/x86_64-linux-gnu/gio/modules
+  GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
+  LD_LIBRARY_PATH: $SNAP_LIBRARY_PATH:$LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
 grade: stable
 layout:
   /etc/ld.so.cache:
@@ -74,6 +76,7 @@ parts:
     - libgspell-1-dev
     - libgstreamer1.0-dev
     - libjson-glib-dev
+    - librest-dev
     - libsoup2.4-dev
     - libsqlite3-dev
     - libxml2-utils
@@ -98,6 +101,7 @@ parts:
     plugin: meson
     source: https://github.com/ibboard/cawbird.git
     stage:
+    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libharfbuzz*
     - -usr/share/alsa
     - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
     - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
@@ -115,61 +119,23 @@ parts:
     after:
     - alsa-mixin
     - cawbird
-    - desktop-settings-build
-    - desktop-settings-packages
     - gtk-locales
     - scripts
     build-snaps:
     - gtk-common-themes
-    - gnome-3-28-1804
+    - gnome-3-34-1804
     override-prime: "set -eux\ncd \"/snap/gtk-common-themes/current\"\nfind . -type\
       \ f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\" \"$SNAPCRAFT_PRIME/usr/{}\", \\;\n\
-      \ncd \"/snap/gnome-3-28-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
+      \ncd \"/snap/gnome-3-34-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
       \ \"$SNAPCRAFT_PRIME/usr/{}\", \\;\n\n\nfor CRUFT in bug lintian man; do\n \
       \   rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT\ndone\nfind $SNAPCRAFT_PRIME/usr/share/doc/\
       \ -type f -not -name 'copyright' -delete\nfind $SNAPCRAFT_PRIME/usr/share -type\
       \ d -empty -delete\n"
     plugin: nil
-  desktop-settings-build:
-    after:
-    - alsa-mixin
-    - cawbird
-    - desktop-settings-packages
-    - scripts
-    build-packages: []
-    override-prime: 'set -eux
-
-      glib-compile-schemas usr/share/glib-2.0/schemas
-
-      '
-    plugin: nil
-    stage:
-    - -usr/share/alsa
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
-    stage-packages: []
-  desktop-settings-packages:
-    after:
-    - alsa-mixin
-    - gnome-3-28-extension
-    build-packages:
-    - libglib2.0-bin
-    plugin: nil
-    prime:
-    - usr/share/glib-2.0/schemas/*
-    stage:
-    - -usr/share/alsa
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
-    stage-packages:
-    - gsettings-desktop-schemas
-    - ubuntu-settings
   gtk-locales:
     after:
     - alsa-mixin
     - cawbird
-    - desktop-settings-build
-    - desktop-settings-packages
     - scripts
     build-packages:
     - apt

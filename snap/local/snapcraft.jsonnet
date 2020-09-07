@@ -2,7 +2,6 @@ local snapcraft = import 'snapcraft.libsonnet';
 
 local alsa = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-alsa/master/alsa.libsonnet';
 
-local gtk_theming = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-utils-library/master/lib/wayland-gtk-theming.libsonnet';
 local gtk_locales = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-utils-library/master/lib/gtk-locales.libsonnet';
 local cleanup = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-utils-library/master/lib/cleanup.libsonnet';
 
@@ -62,12 +61,14 @@ snapcraft {
 
     environment: {
         FINAL_BINARY: "$SNAP/usr/bin/cawbird",
-        LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib",
+        GIO_EXTRA_MODULES: "$SNAP/usr/lib/x86_64-linux-gnu/gio/modules",
+        GSETTINGS_SCHEMA_DIR: "$SNAP/usr/share/glib-2.0/schemas",
+        LD_LIBRARY_PATH: "$SNAP_LIBRARY_PATH:$LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET",
     },
 
     apps: {
         cawbird: {
-            extensions: ["gnome-3-28"],
+            extensions: ["gnome-3-34"],
             command: "bin/check-ld-cache $SNAP/usr/bin/cawbird",
             desktop: "usr/share/applications/cawbird.desktop",
             "common-id": "uk.co.ibboard.cawbird.desktop",
@@ -120,6 +121,7 @@ snapcraft {
                 "libgspell-1-dev",
                 "libgstreamer1.0-dev",
                 "libjson-glib-dev",
+                "librest-dev",
                 "libsoup2.4-dev",
                 "libsqlite3-dev",
                 "libxml2-utils",
@@ -137,10 +139,12 @@ snapcraft {
                 "gstreamer1.0-vaapi",
                 "libgstreamer1.0-0",
             ],
+            stage: [
+                "-usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libharfbuzz*",
+            ],
         },
     },
 }
-+ gtk_theming()
 + gtk_locales()
 + alsa()
-+ cleanup(["gtk-common-themes", "gnome-3-28-1804"])
++ cleanup(["gtk-common-themes", "gnome-3-34-1804"])
