@@ -54,6 +54,8 @@ layout:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0
+  /usr/share/alsa:
+    bind: $SNAP/usr/share/alsa
 name: cawbird
 parts:
   alsa-mixin:
@@ -66,6 +68,7 @@ parts:
     stage-packages:
     - libasound2
     - libasound2-plugins
+    - yad
   cawbird:
     after:
     - alsa-mixin
@@ -125,10 +128,10 @@ parts:
     - gtk-common-themes
     - gnome-3-34-1804
     override-prime: "set -eux\ncd \"/snap/gtk-common-themes/current\"\nfind . -type\
-      \ f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\" \"$SNAPCRAFT_PRIME/usr/{}\", \\;\n\
-      \ncd \"/snap/gnome-3-34-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
-      \ \"$SNAPCRAFT_PRIME/usr/{}\", \\;\n\n\nfor CRUFT in bug lintian man; do\n \
-      \   rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT\ndone\nfind $SNAPCRAFT_PRIME/usr/share/doc/\
+      \ f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\" \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\
+      cd \"/snap/gnome-3-34-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
+      \ \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\nfor CRUFT in bug lintian man; do\n  \
+      \  rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT\ndone\nfind $SNAPCRAFT_PRIME/usr/share/doc/\
       \ -type f -not -name 'copyright' -delete\nfind $SNAPCRAFT_PRIME/usr/share -type\
       \ d -empty -delete\n"
     plugin: nil
