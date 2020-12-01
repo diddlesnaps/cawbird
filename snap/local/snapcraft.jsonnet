@@ -68,7 +68,7 @@ snapcraft {
 
     apps: {
         cawbird: {
-            extensions: ["gnome-3-34"],
+            extensions: ["gnome-3-28"],
             command: "bin/check-ld-cache $SNAP/usr/bin/cawbird",
             desktop: "usr/share/applications/cawbird.desktop",
             "common-id": "uk.co.ibboard.cawbird.desktop",
@@ -147,4 +147,4 @@ snapcraft {
 }
 + gtk_locales()
 + alsa()
-+ cleanup(["gtk-common-themes", "gnome-3-34-1804"])
++ cleanup(["gtk-common-themes", "gnome-3-28-1804"])
