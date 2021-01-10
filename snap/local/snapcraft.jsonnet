@@ -42,7 +42,7 @@ snapcraft {
         [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction
     |||,
 
-    slots: {
+     slots: {
         "dbus-cawbird": {
             interface: "dbus",
             bus: "session",
@@ -63,7 +63,7 @@ snapcraft {
         FINAL_BINARY: "$SNAP/usr/bin/cawbird",
         GIO_EXTRA_MODULES: "$SNAP/usr/lib/x86_64-linux-gnu/gio/modules",
         GSETTINGS_SCHEMA_DIR: "$SNAP/usr/share/glib-2.0/schemas",
-        LD_LIBRARY_PATH: "$SNAP_LIBRARY_PATH:$LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET",
+        LD_LIBRARY_PATH: "$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET",
     },
 
     apps: {
@@ -103,6 +103,7 @@ snapcraft {
             plugin: "meson",
             source: "https://github.com/ibboard/cawbird.git",
             "meson-parameters": [
+                "-Dbuildtype=release",
                 "-Dprefix=/usr",
             ],
             "override-pull": |||
@@ -121,6 +122,7 @@ snapcraft {
                 "libgspell-1-dev",
                 "libgstreamer1.0-dev",
                 "libjson-glib-dev",
+                "liboauth-dev",
                 "librest-dev",
                 "libsoup2.4-dev",
                 "libsqlite3-dev",
@@ -138,6 +140,7 @@ snapcraft {
                 "gstreamer1.0-tools",
                 "gstreamer1.0-vaapi",
                 "libgstreamer1.0-0",
+                "liboauth0",
             ],
             stage: [
                 "-usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libharfbuzz*",
