@@ -10,6 +10,7 @@ snapcraft {
     base: "core18",
     grade: "stable",
     confinement: "strict",
+    compression: "lzo",
     "adopt-info": "cawbird",
 
     summary: "Cawbird Twitter Client (Corebird fork)",
@@ -63,7 +64,7 @@ snapcraft {
         FINAL_BINARY: "$SNAP/usr/bin/cawbird",
         GIO_EXTRA_MODULES: "$SNAP/usr/lib/x86_64-linux-gnu/gio/modules",
         GSETTINGS_SCHEMA_DIR: "$SNAP/usr/share/glib-2.0/schemas",
-        LD_LIBRARY_PATH: "$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET",
+        LD_LIBRARY_PATH: "$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib",
     },
 
     apps: {

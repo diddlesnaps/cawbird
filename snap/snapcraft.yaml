@@ -26,6 +26,7 @@ apps:
     - wayland
     - x11
 base: core18
+compression: lzo
 confinement: strict
 description: "Cawbird is a modern and lightweight Twitter client for the GNOME 3 desktop.\
   \ It\nfeatures inline image and video preview, creation of lists and favorites,\n\
@@ -45,7 +46,7 @@ environment:
   FINAL_BINARY: $SNAP/usr/bin/cawbird
   GIO_EXTRA_MODULES: $SNAP/usr/lib/x86_64-linux-gnu/gio/modules
   GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
-  LD_LIBRARY_PATH: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+  LD_LIBRARY_PATH: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
 grade: stable
 layout:
   /etc/ld.so.cache:
