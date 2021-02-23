@@ -80,6 +80,7 @@ snapcraft {
                 "gsettings",
                 "home",
                 "network",
+                "network-manager-observe",
                 "opengl",
                 "pulseaudio",
                 "unity7",
