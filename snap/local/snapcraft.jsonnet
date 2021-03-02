@@ -43,6 +43,12 @@ snapcraft {
         [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction
     |||,
 
+    architectures: [
+        {"build-on": "amd64"},
+        {"build-on": "armhf"},
+        {"build-on": "arm64"},
+    ],
+
     slots: {
         "dbus-cawbird": {
             interface: "dbus",
