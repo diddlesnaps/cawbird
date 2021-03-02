@@ -11,7 +11,7 @@ apps:
     common-id: uk.co.ibboard.cawbird.desktop
     desktop: usr/share/applications/cawbird.desktop
     extensions:
-    - gnome-3-28
+    - gnome-3-34
     plugs:
     - audio-playback
     - audio-record
@@ -47,6 +47,7 @@ environment:
   FINAL_BINARY: $SNAP/usr/bin/cawbird
   GIO_EXTRA_MODULES: $SNAP/usr/lib/x86_64-linux-gnu/gio/modules
   GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
+  GTK_USE_PORTAL: '0'
   LD_LIBRARY_PATH: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
 grade: stable
 layout:
@@ -67,6 +68,20 @@ parts:
     plugin: dump
     source: https://github.com/diddlesnaps/snapcraft-alsa.git
     source-subdir: snapcraft-assets
+    stage:
+    - etc/asound.conf
+    - snap/command-chain/alsa-launch
+    - usr/bin/yad*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libdnsfile*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libFLAC*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libjack*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpulse*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libsamplerate*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libspeex*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libvorbis*
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio
     stage-packages:
     - libasound2
     - libasound2-plugins
@@ -77,16 +92,9 @@ parts:
     build-packages:
     - gettext
     - libgstreamer-plugins-bad1.0-dev
+    - libgstreamer-plugins-base1.0-dev
     - libgstreamer-plugins-good1.0-dev
-    - libgspell-1-dev
-    - libgstreamer1.0-dev
-    - libjson-glib-dev
     - liboauth-dev
-    - librest-dev
-    - libsoup2.4-dev
-    - libsqlite3-dev
-    - libxml2-utils
-    - locales-all
     - valac
     meson-parameters:
     - -Dbuildtype=release
@@ -121,56 +129,25 @@ parts:
     - gstreamer1.0-pulseaudio
     - gstreamer1.0-tools
     - gstreamer1.0-vaapi
-    - libgstreamer1.0-0
+    - libgstreamer-plugins-bad1.0-0
+    - libgstreamer-plugins-good1.0-0
     - liboauth0
   cleanup:
     after:
     - alsa-mixin
     - cawbird
-    - gtk-locales
     - scripts
     build-snaps:
     - gtk-common-themes
-    - gnome-3-28-1804
+    - gnome-3-34-1804
     override-prime: "set -eux\ncd \"/snap/gtk-common-themes/current\"\nfind . -type\
       \ f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\" \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\
-      cd \"/snap/gnome-3-28-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
+      cd \"/snap/gnome-3-34-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
       \ \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\nfor CRUFT in bug lintian man; do\n  \
       \  rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT\ndone\nfind $SNAPCRAFT_PRIME/usr/share/doc/\
       \ -type f -not -name 'copyright' -delete\nfind $SNAPCRAFT_PRIME/usr/share -type\
       \ d -empty -delete\n"
     plugin: nil
-  gtk-locales:
-    after:
-    - alsa-mixin
-    - cawbird
-    - scripts
-    build-packages:
-    - apt
-    - dpkg
-    override-build: 'set -eux
-
-      for deb in *.deb; do dpkg-deb -x $deb .; done
-
-      find usr/share/locale-langpack -type f -not -name "gtk30*.mo" -exec rm ''{}''
-      \;
-
-      mkdir -p "$SNAPCRAFT_PART_INSTALL/usr/share"
-
-      cp -R usr/share/locale-langpack "$SNAPCRAFT_PART_INSTALL/usr/share/"
-
-      '
-    override-pull: 'set -eux
-
-      apt download "language-pack-gnome-*-base"
-
-      '
-    plugin: nil
-    stage:
-    - -usr/share/alsa
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
-    stage-packages: []
   scripts:
     after:
     - alsa-mixin

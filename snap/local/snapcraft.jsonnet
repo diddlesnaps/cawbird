@@ -43,7 +43,7 @@ snapcraft {
         [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction
     |||,
 
-     slots: {
+    slots: {
         "dbus-cawbird": {
             interface: "dbus",
             bus: "session",
@@ -65,11 +65,12 @@ snapcraft {
         GIO_EXTRA_MODULES: "$SNAP/usr/lib/x86_64-linux-gnu/gio/modules",
         GSETTINGS_SCHEMA_DIR: "$SNAP/usr/share/glib-2.0/schemas",
         LD_LIBRARY_PATH: "$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib",
+        GTK_USE_PORTAL: "0",
     },
 
     apps: {
         cawbird: {
-            extensions: ["gnome-3-28"],
+            extensions: ["gnome-3-34"],
             command: "bin/check-ld-cache $SNAP/usr/bin/cawbird",
             desktop: "usr/share/applications/cawbird.desktop",
             "common-id": "uk.co.ibboard.cawbird.desktop",
@@ -118,18 +119,10 @@ snapcraft {
             |||,
             "build-packages": [
                 "gettext",
-                "libasound2-dev",
                 "libgstreamer-plugins-bad1.0-dev",
+                "libgstreamer-plugins-base1.0-dev",
                 "libgstreamer-plugins-good1.0-dev",
-                "libgspell-1-dev",
-                "libgstreamer1.0-dev",
-                "libjson-glib-dev",
                 "liboauth-dev",
-                "librest-dev",
-                "libsoup2.4-dev",
-                "libsqlite3-dev",
-                "libxml2-utils",
-                "locales-all",
                 "valac",
             ],
             "stage-packages": [
@@ -141,7 +134,8 @@ snapcraft {
                 "gstreamer1.0-pulseaudio",
                 "gstreamer1.0-tools",
                 "gstreamer1.0-vaapi",
-                "libgstreamer1.0-0",
+                "libgstreamer-plugins-bad1.0-0",
+                "libgstreamer-plugins-good1.0-0",
                 "liboauth0",
             ],
             stage: [
@@ -150,6 +144,5 @@ snapcraft {
         },
     },
 }
-+ gtk_locales()
 + alsa()
-+ cleanup(["gtk-common-themes", "gnome-3-28-1804"])
++ cleanup(["gtk-common-themes", "gnome-3-34-1804"])
