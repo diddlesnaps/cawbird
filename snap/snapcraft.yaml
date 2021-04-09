@@ -11,7 +11,7 @@ apps:
     common-id: uk.co.ibboard.cawbird.desktop
     desktop: usr/share/applications/cawbird.desktop
     extensions:
-    - gnome-3-34
+    - gnome-3-38
     plugs:
     - audio-playback
     - audio-record
@@ -30,7 +30,7 @@ architectures:
 - build-on: amd64
 - build-on: armhf
 - build-on: arm64
-base: core18
+base: core20
 compression: lzo
 confinement: strict
 description: "Cawbird is a modern and lightweight Twitter client for the GNOME 3 desktop.\
@@ -143,10 +143,10 @@ parts:
     - scripts
     build-snaps:
     - gtk-common-themes
-    - gnome-3-34-1804
+    - gnome-3-38-2004
     override-prime: "set -eux\ncd \"/snap/gtk-common-themes/current\"\nfind . -type\
       \ f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\" \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\
-      cd \"/snap/gnome-3-34-1804/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
+      cd \"/snap/gnome-3-38-2004/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
       \ \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\nfor CRUFT in bug lintian man; do\n  \
       \  rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT\ndone\nfind $SNAPCRAFT_PRIME/usr/share/doc/\
       \ -type f -not -name 'copyright' -delete\nfind $SNAPCRAFT_PRIME/usr/share -type\

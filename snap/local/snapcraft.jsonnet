@@ -7,7 +7,7 @@ local cleanup = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-
 
 snapcraft {
     name: "cawbird",
-    base: "core18",
+    base: "core20",
     grade: "stable",
     confinement: "strict",
     compression: "lzo",
@@ -76,7 +76,7 @@ snapcraft {
 
     apps: {
         cawbird: {
-            extensions: ["gnome-3-34"],
+            extensions: ["gnome-3-38"],
             command: "bin/check-ld-cache $SNAP/usr/bin/cawbird",
             desktop: "usr/share/applications/cawbird.desktop",
             "common-id": "uk.co.ibboard.cawbird.desktop",
@@ -151,4 +151,4 @@ snapcraft {
     },
 }
 + alsa()
-+ cleanup(["gtk-common-themes", "gnome-3-34-1804"])
++ cleanup(["gtk-common-themes", "gnome-3-38-2004"])
