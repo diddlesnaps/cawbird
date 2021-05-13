@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="data/hicolor/256x256/apps/corebird.png" alt="Cawbird">
+  <img src="snapcrafters-assets/cawbird.png" alt="Cawbird">
   <br />
   Cawbird
 </h1>
