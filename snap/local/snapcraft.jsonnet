@@ -58,9 +58,6 @@ snapcraft {
     },
 
     layout: {
-        "/etc/ld.so.cache": {
-            "bind-file": "$SNAP_DATA/etc/ld.so.cache",
-        },
         "/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0": {
             bind: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0",
         }
@@ -77,7 +74,7 @@ snapcraft {
     apps: {
         cawbird: {
             extensions: ["gnome-3-38"],
-            command: "bin/check-ld-cache $SNAP/usr/bin/cawbird",
+            command: "usr/bin/cawbird",
             desktop: "usr/share/applications/cawbird.desktop",
             "common-id": "uk.co.ibboard.cawbird.desktop",
             plugs: [
@@ -98,15 +95,6 @@ snapcraft {
     },
 
     parts: {
-        "scripts": {
-            plugin: "dump",
-            source: "scripts",
-            organize: {
-                "build-ld-cache": "bin/build-ld-cache",
-                "check-ld-cache": "bin/check-ld-cache",
-            },
-        },
-
         cawbird: {
             "parse-info": ["usr/share/metainfo/uk.co.ibboard.cawbird.appdata.xml"],
             plugin: "meson",
@@ -139,6 +127,7 @@ snapcraft {
                 "gstreamer1.0-plugins-bad",
                 "gstreamer1.0-plugins-base",
                 "gstreamer1.0-plugins-good",
+                "gstreamer1.0-plugins-ugly",
                 "gstreamer1.0-pulseaudio",
                 "gstreamer1.0-tools",
                 "gstreamer1.0-vaapi",

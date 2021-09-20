@@ -5,7 +5,7 @@
 adopt-info: cawbird
 apps:
   cawbird:
-    command: bin/check-ld-cache $SNAP/usr/bin/cawbird
+    command: usr/bin/cawbird
     command-chain:
     - snap/command-chain/alsa-launch
     common-id: uk.co.ibboard.cawbird.desktop
@@ -55,8 +55,6 @@ environment:
   LD_LIBRARY_PATH: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
 grade: stable
 layout:
-  /etc/ld.so.cache:
-    bind-file: $SNAP_DATA/etc/ld.so.cache
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0:
@@ -132,6 +130,7 @@ parts:
     - gstreamer1.0-plugins-bad
     - gstreamer1.0-plugins-base
     - gstreamer1.0-plugins-good
+    - gstreamer1.0-plugins-ugly
     - gstreamer1.0-pulseaudio
     - gstreamer1.0-tools
     - gstreamer1.0-vaapi
@@ -142,7 +141,6 @@ parts:
     after:
     - alsa-mixin
     - cawbird
-    - scripts
     build-snaps:
     - gtk-common-themes
     - gnome-3-38-2004
@@ -154,20 +152,6 @@ parts:
       \ -type f -not -name 'copyright' -delete\nfind $SNAPCRAFT_PRIME/usr/share -type\
       \ d -empty -delete\n"
     plugin: nil
-  scripts:
-    after:
-    - alsa-mixin
-    build-packages: []
-    organize:
-      build-ld-cache: bin/build-ld-cache
-      check-ld-cache: bin/check-ld-cache
-    plugin: dump
-    source: scripts
-    stage:
-    - -usr/share/alsa
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
-    stage-packages: []
 slots:
   dbus-cawbird:
     bus: session
