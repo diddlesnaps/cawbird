@@ -6,15 +6,12 @@ adopt-info: cawbird
 apps:
   cawbird:
     command: usr/bin/cawbird
-    command-chain:
-    - snap/command-chain/alsa-launch
     common-id: uk.co.ibboard.cawbird.desktop
     desktop: usr/share/applications/cawbird.desktop
     extensions:
     - gnome-3-38
     plugs:
     - audio-playback
-    - audio-record
     - desktop
     - desktop-legacy
     - gsettings
@@ -48,51 +45,21 @@ description: "Cawbird is a modern and lightweight Twitter client for the GNOME 3
   Cawbird client.\n\n[1]: https://build.opensuse.org/project/show/home:IBBoard:desktop\n\
   [2]: https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/migration/introduction\n"
 environment:
-  FINAL_BINARY: $SNAP/usr/bin/cawbird
-  GIO_EXTRA_MODULES: $SNAP/usr/lib/x86_64-linux-gnu/gio/modules
   GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
   GTK_USE_PORTAL: '0'
-  LD_LIBRARY_PATH: $SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
 grade: stable
 layout:
-  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
-    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gstreamer-1.0
-  /usr/share/alsa:
-    bind: $SNAP/usr/share/alsa
 name: cawbird
 parts:
-  alsa-mixin:
-    after: []
-    build-packages:
-    - libasound2-dev
-    plugin: dump
-    source: https://github.com/diddlesnaps/snapcraft-alsa.git
-    source-subdir: snapcraft-assets
-    stage:
-    - etc/asound.conf
-    - snap/command-chain/alsa-launch
-    - usr/bin/yad*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libdnsfile*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libFLAC*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libjack*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpulse*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libsamplerate*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libspeex*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libvorbis*
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio
-    stage-packages:
-    - libasound2
-    - libasound2-plugins
-    - yad
   cawbird:
-    after:
-    - alsa-mixin
+    build-environment:
+    - CFLAGS: -Ofast -g -pipe
+    - CXXFLAGS: -Ofast -g -pipe
     build-packages:
     - gettext
+    - libgstreamer1.0-dev
     - libgstreamer-plugins-bad1.0-dev
     - libgstreamer-plugins-base1.0-dev
     - libgstreamer-plugins-good1.0-dev
@@ -101,12 +68,15 @@ parts:
     meson-parameters:
     - -Dbuildtype=release
     - -Dprefix=/usr
+    - -Db_lto=true
+    - -Db_pie=true
     - -Dconsumer_key_base64=VmY5dG9yRFcyWk93MzJEZmhVdEk5Y3NMOA==
     - -Dconsumer_secret_base64=MThCRXIxbWRESDQ2Y0podzVtVU13SGUyVGlCRXhPb3BFRHhGYlB6ZkpybG5GdXZaSjI=
     override-pull: 'snapcraftctl pull
 
 
-      git checkout "$(git describe --tags --abbrev=0 --match ''v*'')"
+      git checkout "$(git describe --tags --abbrev=0 --exclude ''*-flatpak'' --match
+      ''v*'')"
 
       snapcraftctl set-version "$(git describe --tags | sed -e ''s|^v||'')"
 
@@ -121,10 +91,8 @@ parts:
     source: https://github.com/ibboard/cawbird.git
     stage:
     - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libharfbuzz*
-    - -usr/share/alsa
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
-    - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libasound*
     stage-packages:
+    - freeglut3
     - gstreamer1.0-gtk3
     - gstreamer1.0-libav
     - gstreamer1.0-plugins-bad
@@ -134,12 +102,13 @@ parts:
     - gstreamer1.0-pulseaudio
     - gstreamer1.0-tools
     - gstreamer1.0-vaapi
+    - libglu1-mesa
     - libgstreamer-plugins-bad1.0-0
+    - libgstreamer-plugins-base1.0-0
     - libgstreamer-plugins-good1.0-0
     - liboauth0
   cleanup:
     after:
-    - alsa-mixin
     - cawbird
     build-snaps:
     - gtk-common-themes

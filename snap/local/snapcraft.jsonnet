@@ -1,7 +1,5 @@
 local snapcraft = import 'snapcraft.libsonnet';
 
-local alsa = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-alsa/master/alsa.libsonnet';
-
 local gtk_locales = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-utils-library/master/lib/gtk-locales.libsonnet';
 local cleanup = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-utils-library/master/lib/cleanup.libsonnet';
 
@@ -64,10 +62,7 @@ snapcraft {
     },
 
     environment: {
-        FINAL_BINARY: "$SNAP/usr/bin/cawbird",
-        GIO_EXTRA_MODULES: "$SNAP/usr/lib/x86_64-linux-gnu/gio/modules",
         GSETTINGS_SCHEMA_DIR: "$SNAP/usr/share/glib-2.0/schemas",
-        LD_LIBRARY_PATH: "$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib",
         GTK_USE_PORTAL: "0",
     },
 
@@ -99,22 +94,29 @@ snapcraft {
             "parse-info": ["usr/share/metainfo/uk.co.ibboard.cawbird.appdata.xml"],
             plugin: "meson",
             source: "https://github.com/ibboard/cawbird.git",
+            "build-environment": [
+                { CFLAGS: "-Ofast -g -pipe" },
+                { CXXFLAGS: "-Ofast -g -pipe" },
+            ],
             "meson-parameters": [
                 "-Dbuildtype=release",
                 "-Dprefix=/usr",
+                "-Db_lto=true",
+                "-Db_pie=true",
                 "-Dconsumer_key_base64=VmY5dG9yRFcyWk93MzJEZmhVdEk5Y3NMOA==",
                 "-Dconsumer_secret_base64=MThCRXIxbWRESDQ2Y0podzVtVU13SGUyVGlCRXhPb3BFRHhGYlB6ZkpybG5GdXZaSjI=",
             ],
             "override-pull": |||
                 snapcraftctl pull
 
-                git checkout "$(git describe --tags --abbrev=0 --match 'v*')"
+                git checkout "$(git describe --tags --abbrev=0 --exclude '*-flatpak' --match 'v*')"
                 snapcraftctl set-version "$(git describe --tags | sed -e 's|^v||')"
 
                 sed -i 's|^Icon=.*|Icon=/usr/share/icons/hicolor/scalable/apps/uk.co.ibboard.cawbird.svg|' data/uk.co.ibboard.cawbird.desktop.in
             |||,
             "build-packages": [
                 "gettext",
+                "libgstreamer1.0-dev",
                 "libgstreamer-plugins-bad1.0-dev",
                 "libgstreamer-plugins-base1.0-dev",
                 "libgstreamer-plugins-good1.0-dev",
@@ -122,6 +124,7 @@ snapcraft {
                 "valac",
             ],
             "stage-packages": [
+                "freeglut3",
                 "gstreamer1.0-gtk3",
                 "gstreamer1.0-libav",
                 "gstreamer1.0-plugins-bad",
@@ -131,7 +134,9 @@ snapcraft {
                 "gstreamer1.0-pulseaudio",
                 "gstreamer1.0-tools",
                 "gstreamer1.0-vaapi",
+                "libglu1-mesa",
                 "libgstreamer-plugins-bad1.0-0",
+                "libgstreamer-plugins-base1.0-0",
                 "libgstreamer-plugins-good1.0-0",
                 "liboauth0",
             ],
@@ -141,5 +146,4 @@ snapcraft {
         },
     },
 }
-+ alsa()
 + cleanup(["gtk-common-themes", "gnome-3-38-2004"])
