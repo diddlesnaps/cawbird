@@ -7,27 +7,20 @@ apps:
   cawbird:
     command: usr/bin/cawbird
     common-id: uk.co.ibboard.cawbird.desktop
-    desktop: usr/share/applications/cawbird.desktop
+    desktop: usr/share/applications/uk.co.ibboard.cawbird.desktop
     extensions:
-    - gnome-3-38
+    - gnome
     plugs:
     - audio-playback
-    - desktop
-    - desktop-legacy
     - gsettings
     - home
     - network
     - network-manager-observe
-    - opengl
-    - pulseaudio
-    - unity7
-    - wayland
-    - x11
 architectures:
 - build-on: amd64
 - build-on: armhf
 - build-on: arm64
-base: core20
+base: core22
 compression: lzo
 confinement: strict
 description: "Cawbird is a modern and lightweight Twitter client for the GNOME 3 desktop.\
@@ -72,13 +65,13 @@ parts:
     - -Db_pie=true
     - -Dconsumer_key_base64=VmY5dG9yRFcyWk93MzJEZmhVdEk5Y3NMOA==
     - -Dconsumer_secret_base64=MThCRXIxbWRESDQ2Y0podzVtVU13SGUyVGlCRXhPb3BFRHhGYlB6ZkpybG5GdXZaSjI=
-    override-pull: 'snapcraftctl pull
+    override-pull: 'craftctl default
 
 
       git checkout "$(git describe --tags --abbrev=0 --exclude ''*-flatpak'' --match
       ''v*'')"
 
-      snapcraftctl set-version "$(git describe --tags | sed -e ''s|^v||'')"
+      craftctl set version="$(git describe --tags | sed -e ''s|^v||'')"
 
 
       sed -i ''s|^Icon=.*|Icon=/usr/share/icons/hicolor/scalable/apps/uk.co.ibboard.cawbird.svg|''
@@ -112,10 +105,10 @@ parts:
     - cawbird
     build-snaps:
     - gtk-common-themes
-    - gnome-3-38-2004
+    - gnome-42-2204
     override-prime: "set -eux\ncd \"/snap/gtk-common-themes/current\"\nfind . -type\
       \ f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\" \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\
-      cd \"/snap/gnome-3-38-2004/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
+      cd \"/snap/gnome-42-2204/current\"\nfind . -type f,l -exec rm -f \"$SNAPCRAFT_PRIME/{}\"\
       \ \"$SNAPCRAFT_PRIME/usr/{}\" \\;\n\n\nfor CRUFT in bug lintian man; do\n  \
       \  rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT\ndone\nfind $SNAPCRAFT_PRIME/usr/share/doc/\
       \ -type f -not -name 'copyright' -delete\nfind $SNAPCRAFT_PRIME/usr/share -type\

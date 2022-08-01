@@ -5,7 +5,7 @@ local cleanup = import 'https://raw.githubusercontent.com/diddlesnaps/snapcraft-
 
 snapcraft {
     name: "cawbird",
-    base: "core20",
+    base: "core22",
     grade: "stable",
     confinement: "strict",
     compression: "lzo",
@@ -68,23 +68,16 @@ snapcraft {
 
     apps: {
         cawbird: {
-            extensions: ["gnome-3-38"],
+            extensions: ["gnome"],
             command: "usr/bin/cawbird",
-            desktop: "usr/share/applications/cawbird.desktop",
+            desktop: "usr/share/applications/uk.co.ibboard.cawbird.desktop",
             "common-id": "uk.co.ibboard.cawbird.desktop",
             plugs: [
                 "audio-playback",
-                "desktop",
-                "desktop-legacy",
                 "gsettings",
                 "home",
                 "network",
                 "network-manager-observe",
-                "opengl",
-                "pulseaudio",
-                "unity7",
-                "wayland",
-                "x11",
             ],
         },
     },
@@ -107,10 +100,10 @@ snapcraft {
                 "-Dconsumer_secret_base64=MThCRXIxbWRESDQ2Y0podzVtVU13SGUyVGlCRXhPb3BFRHhGYlB6ZkpybG5GdXZaSjI=",
             ],
             "override-pull": |||
-                snapcraftctl pull
+                craftctl default
 
                 git checkout "$(git describe --tags --abbrev=0 --exclude '*-flatpak' --match 'v*')"
-                snapcraftctl set-version "$(git describe --tags | sed -e 's|^v||')"
+                craftctl set version="$(git describe --tags | sed -e 's|^v||')"
 
                 sed -i 's|^Icon=.*|Icon=/usr/share/icons/hicolor/scalable/apps/uk.co.ibboard.cawbird.svg|' data/uk.co.ibboard.cawbird.desktop.in
             |||,
@@ -146,4 +139,4 @@ snapcraft {
         },
     },
 }
-+ cleanup(["gtk-common-themes", "gnome-3-38-2004"])
++ cleanup(["gtk-common-themes", "gnome-42-2204"])
